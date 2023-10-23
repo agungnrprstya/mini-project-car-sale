@@ -17,7 +17,9 @@ function Navbar({ logout }) {
           </a>
           <ul className="hidden absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 lg:mx-auto lg:flex lg:items-center lg:w-auto lg:space-x-6">
             <li>
-              <a className="cursor-pointer text-base text-gray-900 hover:text-blue-600 hover:font-bold">Home</a>
+              <Link to="/">
+                <a className="cursor-pointer text-base text-gray-900 hover:text-blue-600 hover:font-bold">Home</a>
+              </Link>
             </li>
             <li className="text-gray-300">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" className="w-4 h-4 current-fill" viewBox="0 0 24 24">

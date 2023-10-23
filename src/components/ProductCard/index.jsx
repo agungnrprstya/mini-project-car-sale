@@ -1,14 +1,15 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-function ProductList({ displayedProducts }) {
+function ProductCard({ products }) {
   return (
     <>
-      <div className="cursor-pointer mx-auto w-full max-w-screen-xl pb-16">
+      <div className="mx-auto w-full max-w-screen-xl pb-[3rem]">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-5">
-            {displayedProducts.map((product, index) => (
+            {products.map((product, index) => (
               <div
-                className="bg-gray-100 rounded-lg shadow-lg p-8 h-full w-full hover:bg-gray-200 hover:scale-105 transition duration-500"
+                className="cursor-pointer bg-gray-100 rounded-lg shadow-lg p-8 h-full w-full hover:bg-gray-200 hover:scale-105 transition duration-500"
                 key={index}
               >
                 <div className=" relative overflow-hidden group-hover:opacity-75 rounded-lg  ">
@@ -19,7 +20,9 @@ function ProductList({ displayedProducts }) {
                 <p className="text-gray-500 text-sm mt-2">{product.alt}</p>
                 <div className="flex items-center justify-between mt-4">
                   <span className="text-gray-900 font-bold text-lg">{product.price}</span>
-                  <button className="bg-gray-900 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800">Detail</button>
+                  <Link to={`/product/${product.id}`}>
+                    <button className="bg-gray-900 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800">Detail</button>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -30,4 +33,4 @@ function ProductList({ displayedProducts }) {
   );
 }
 
-export default ProductList;
+export default ProductCard;
