@@ -15,7 +15,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
 
   return (
     <nav>
-      <ul className="bg-red-500 cursor-pointer justify-center mx-auto w-0 max-w-screen-xl flex -space-x-px h-10 text-base mb-5">
+      <ul className="bg-white cursor-pointer justify-center mx-auto w-0 max-w-screen-xl flex -space-x-px h-10 text-base mb-5">
         <li>
           <a
             onClick={prevPage}
@@ -27,14 +27,13 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
             </svg>
           </a>
         </li>
+
         {Array.from({ length: totalPages }).map((_, index) => (
           <li key={index}>
             <a
               onClick={() => onPageChange(index + 1)}
-              className={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover-bg-gray-100 hover-text-gray-700 dark-bg-gray-800 dark-border-gray-700 dark-text-gray-400 dark-hover-bg-gray-700 dark-hover-text-white ${
-                currentPage === index + 1
-                  ? "z-10 text-blue-600 border-blue-300 bg-blue-50 hover-bg-blue-100 hover-text-blue-700 dark-border-gray-700 dark-bg-gray-700 dark-text-white"
-                  : ""
+              className={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover-bg-gray-100 hover-text-gray-700 dark-bg-gray-800 dark-border-gray-700 dark-text-gray-400 dark-hover-bg-gray-700 dark-hover-text-white ${
+                currentPage === index + 1 ? "z-10 text-gray-700 bg-blue-100 hover:bg-blue-100" : "z-10 text-gray-600 bg-white hover:bg-blue-100"
               }`}
             >
               {index + 1}
@@ -45,7 +44,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         <li>
           <a
             onClick={nextPage}
-            className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover-bg-gray-100 hover-text-gray-700 dark-bg-gray-800 dark-border-gray-700 dark-text-gray-400 dark-hover-bg-gray-700 dark-hover-text-white"
+            className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover-text-gray-700 dark-bg-gray-800 dark-border-gray-700 dark-text-gray-400 dark-hover-bg-gray-700 dark-hover-text-white"
           >
             <span className="sr-only">Next</span>
             <svg className="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
