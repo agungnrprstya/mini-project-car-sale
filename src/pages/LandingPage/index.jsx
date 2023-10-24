@@ -1,74 +1,32 @@
 import React from "react";
-import { APIAuth } from "../../apis/APIAuth";
+import { initialProduct } from "../../data/productData";
 import { Link } from "react-router-dom";
-import Navbar from "../../components/Navbar";
+import { shuffle } from "lodash";
 import Carousel from "../../components/Carousel";
 import Footer from "../../components/Footer";
-import ProductCard from "../../components/ProductCard";
+import Navbar from "../../components/Navbar";
+import ProductCard from "../../components/Card";
 
-const logout = async () => {
-  await APIAuth.signOut();
+const getRandomProducts = () => {
+  const shuffledProducts = shuffle(initialProduct);
+  return shuffledProducts.slice(0, 4);
 };
 
-const products = [
-  {
-    url: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2620&q=80",
-    alt: "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-    productName: "Earthen Bottle",
-    price: "$45",
-  },
-  {
-    url: "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
-    alt: "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-    productName: "Earthen Bottle",
-    price: "$48",
-  },
-  {
-    url: "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
-    alt: "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-    productName: "Earthen Bottle",
-    price: "$48",
-  },
-  {
-    url: "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
-    alt: "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-    productName: "Earthen Bottle",
-    price: "$48",
-  },
-  {
-    url: "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
-    alt: "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-    productName: "Earthen Bottle",
-    price: "$48",
-  },
-  {
-    url: "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
-    alt: "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-    productName: "Earthen Bottle",
-    price: "$48",
-  },
-  {
-    url: "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
-    alt: "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-    productName: "Earthen Bottle",
-    price: "$48",
-  },
-];
-
-const displayedProducts = products.slice(0, 4);
+// Call the function to get the random products
+const displayedProducts = getRandomProducts();
 
 function LandingPage() {
   return (
     <>
-      <Navbar logout={logout} />
+      <Navbar />
       <Carousel />
       <div className="mx-auto w-full max-w-screen-xl flex justify-between">
-        <h2 className="text-xl font-bold text-gray-900">Introducing Our Latest Product</h2>
+        <h2 className="text-xl font-bold text-gray-900">Our Recommendation</h2>
         <Link to="/product">
           <h2 className="text-xl font-bold text-blue-500">View All</h2>
         </Link>
       </div>
-      <ProductCard displayedProducts={displayedProducts} />
+      <ProductCard product={displayedProducts} />
       <Footer />
     </>
   );
