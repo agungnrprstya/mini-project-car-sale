@@ -53,7 +53,7 @@ function Navbar() {
                 </svg>
               </li>
               <li>
-                <Link to="/Dashboard" className="cursor-pointer text-base text-gray-900 hover:text-blue-600 hover:font-bold">
+                <Link to="/dashboard" className="cursor-pointer text-base text-gray-900 hover:text-blue-600 hover:font-bold">
                   Dashboard
                 </Link>
               </li>

@@ -73,7 +73,16 @@ function Detail({ product }) {
                 </div>
                 <div className="w-1/2 sm:w-[11rem] cursor-pointer">
                   <a className="block border hover:border-blue-300">
-                    <img src={product.url} alt="" className="object-cover w-full lg:h-[7rem]" onClick={() => openModal(product.url)} />
+                    <img
+                      src="https://m.economictimes.com/thumb/height-450,width-600,imgsize-92902,msid-96559100/the-rimac-nevera-is-now-the-fastest-electric-car-in-the-world-image-rimac.jpg"
+                      alt=""
+                      className="object-cover w-full lg:h-[7rem]"
+                      onClick={() =>
+                        openModal(
+                          "https://m.economictimes.com/thumb/height-450,width-600,imgsize-92902,msid-96559100/the-rimac-nevera-is-now-the-fastest-electric-car-in-the-world-image-rimac.jpg"
+                        )
+                      }
+                    />
                   </a>
                 </div>
                 <div className="w-1/2 sm:w-[11rem] cursor-pointer">
