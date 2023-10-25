@@ -5,7 +5,7 @@ function CategoryFilter({ selectedCategory, onCategoryChange }) {
   return (
     <form className="mx-auto w-full max-w-screen-xl hidden lg:block">
       <h3 className="sr-only">Categories</h3>
-      <ul role="list" className="flex flex-wrap flex-row justify-between text-lg font-medium text-gray-900 pt-6">
+      <ul role="list" className="flex flex-wrap flex-row gap-3 text-lg font-medium text-gray-900 pt-6">
         {categories.map((category) => (
           <li key={category} className="mb-2">
             <a

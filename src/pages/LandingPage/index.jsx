@@ -17,7 +17,7 @@ const displayedProducts = getRandomProducts();
 
 function LandingPage() {
   return (
-    <>
+    <div className="flex flex-col min-h-screen justify-between">
       <Navbar />
       <Carousel />
       <div className="mx-auto w-full max-w-screen-xl flex justify-between">
@@ -28,7 +28,7 @@ function LandingPage() {
       </div>
       <ProductCard product={displayedProducts} />
       <Footer />
-    </>
+    </div>
   );
 }
 
