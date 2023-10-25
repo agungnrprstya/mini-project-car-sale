@@ -40,7 +40,7 @@ function Navbar() {
               Product
             </Link>
           </li>
-          {authentication.isAuthorized() && (
+          {authentication.isAuthorizedAdmin() && (
             <>
               <li className="text-gray-300">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" className="w-4 h-4 current-fill" viewBox="0 0 24 24">

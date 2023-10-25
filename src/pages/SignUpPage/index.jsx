@@ -3,29 +3,19 @@ import { APIAuth } from "../../apis/APIAuth";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 
-export default function LoginPage() {
+export default function SignUpPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const signIn = async (e) => {
+  const createAccount = async (e) => {
     e.preventDefault();
     try {
-      await APIAuth.signInWithCredentials({ email, password });
-      message.success("login successful");
-      navigate("/");
-    } catch (error) {
-      message.error("login failed. your email or password is wrong!");
-    }
-  };
-
-  const signInWithGoogle = async () => {
-    try {
-      await APIAuth.signInWithGoogleOAuth();
-      message.success("login successful");
-      navigate("/");
-    } catch (error) {
-      message.error("login failed. google oauth is failed");
+      await APIAuth.createAccount({ email, password });
+      message.success("sign up successful");
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -42,7 +32,7 @@ export default function LoginPage() {
           <h2 className="mt-10 text-center text-3xl font-extrabold">Sign in to your account</h2>
           <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-md">
             <div className="py-8 px-4 shadow sm:rounded-lg sm:px-10">
-              <form className="space-y-6" onSubmit={signIn}>
+              <form className="space-y-6" onSubmit={createAccount}>
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-white-300">
                     Email address
@@ -85,31 +75,10 @@ export default function LoginPage() {
                     htmlFor="submit"
                     className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
-                    Sign in
+                    Sign Up
                   </button>
                 </div>
               </form>
-              <div className="mt-6">
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-700"></div>
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-gray-600 text-gray-300">Or continue with</span>
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <div>
-                    <a
-                      onClick={signInWithGoogle}
-                      className="w-full flex items-center justify-center px-8 py-3 border border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-300 bg-gray-200 hover:bg-gray-700 cursor-pointer"
-                    >
-                      <img className="h-6 w-6 text-white" src="https://www.svgrepo.com/show/475656/google-color.svg" alt="" />
-                    </a>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>

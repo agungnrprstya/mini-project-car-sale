@@ -32,13 +32,13 @@ function ProductPage() {
   const productsToDisplay = filteredProducts.slice(startIndex, endIndex);
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen justify-between">
       <Navbar />
       <CategoryFilter selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
       <ProductCard product={productsToDisplay} />
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       <Footer />
-    </>
+    </div>
   );
 }
 
