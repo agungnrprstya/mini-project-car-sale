@@ -1,11 +1,22 @@
+import { auth } from "../configs/firebase";
+import { CONST } from "./constant";
 import { signOut } from "firebase/auth";
 import Cookies from "js-cookie";
-import { auth } from "../configs/firebase";
 
 const authentication = {
-  isAuthorized() {
-    if (this.getToken() || this.getRefreshToken()) return true;
+  isAuthorizedAdmin() {
+    if (this.getLocalId() && this.getToken()) return true;
     return false;
+  },
+
+  isAuthorized() {
+    if (this.getToken()) return true;
+    return false;
+  },
+
+  getLocalId() {
+    const localId = Cookies.get("localId");
+    return localId === CONST.ADMIN_TOKEN_1 || localId === CONST.ADMIN_TOKEN_2;
   },
 
   getToken() {
@@ -13,22 +24,16 @@ const authentication = {
     return token;
   },
 
-  getRefreshToken() {
-    return Cookies.get("refreshToken");
-  },
-
-  storeCredentialsToCookie({ idToken, oauthAccessToken, refreshToken }) {
-    const expires = new Date();
-    expires.setSeconds(expires.getSeconds() + 10);
-    if (idToken) Cookies.set("idToken", idToken, { expires });
-    if (oauthAccessToken) Cookies.set("oauthAccessToken", oauthAccessToken, { expires });
-    Cookies.set("refreshToken", refreshToken);
+  storeCredentialsToCookie({ idToken, oauthAccessToken, localId }) {
+    if (idToken) Cookies.set("idToken", idToken);
+    if (oauthAccessToken) Cookies.set("oauthAccessToken", oauthAccessToken);
+    if (localId) Cookies.set("localId", localId);
   },
 
   clearCredentialsFromCookie() {
     Cookies.remove("idToken");
     Cookies.remove("oauthAccessToken");
-    Cookies.remove("refreshToken");
+    Cookies.remove("localId");
   },
 
   async logOut() {
