@@ -16,7 +16,7 @@ const authentication = {
 
   getLocalId() {
     const localId = Cookies.get("localId");
-    return localId === CONST.ADMIN_TOKEN_1 || localId === CONST.ADMIN_TOKEN_2;
+    return localId === CONST.ADMIN_ID_1 || localId === CONST.ADMIN_ID_2;
   },
 
   getToken() {
