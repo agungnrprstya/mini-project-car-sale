@@ -1,20 +1,31 @@
-import React, { useState } from "react";
-import { initialTransaction } from "../../data/listTransaction";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Pagination from "../../components/Pagination";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchGetInvoices, selectInvoices } from "../../store/invoicesSlice";
 
 function ListTransaction() {
-  const transaction = initialTransaction;
-  const itemsPerPage = 12; // Set the number of items to display per page
+  const dispatch = useDispatch();
+  const stateInvoices = useSelector(selectInvoices);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Calculate the range of products to display on the current page
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const displayedTransaction = transaction.slice(startIndex, endIndex);
+  useEffect(() => {
+    dispatch(fetchGetInvoices());
+  }, [dispatch]);
 
-  const onPageChange = (page) => {
-    setCurrentPage(page);
+  //Pagination
+  const invoicesPerPage = 12;
+  const startIndex = (currentPage - 1) * invoicesPerPage;
+  const endIndex = startIndex + invoicesPerPage;
+  const totalPages = Math.ceil(stateInvoices.data.length / invoicesPerPage);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  // Display Product
+  const invoicesToDisplay = {
+    data: stateInvoices.data.slice(startIndex, endIndex),
   };
 
   return (
@@ -28,37 +39,42 @@ function ListTransaction() {
               <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">Price</th>
               <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">Customer Name</th>
               <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">Email</th>
+              <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">Phone Number</th>
               <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">Address</th>
             </tr>
           </thead>
           <tbody className="block md:table-row-group">
-            {displayedTransaction.map((transaction) => (
-              <tr key={transaction.id} className="bg-gray-300 border border-grey-500 md:border-none block md:table-row">
+            {invoicesToDisplay.data.map((transaction) => (
+              <tr className="bg-gray-300 border border-grey-500 md:border-none block md:table-row" key={transaction.id}>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">Name</span>
+                  <span className="inline-block w-1/3 md:hidden font-bold">Car Name</span>
                   {transaction.carName}
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">User Name</span>
+                  <span className="inline-block w-1/3 md:hidden font-bold">Price</span>
                   {transaction.price}
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">Mobile</span>
+                  <span className="inline-block w-1/3 md:hidden font-bold">Customer Name</span>
                   {transaction.name}
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">Mobile</span>
+                  <span className="inline-block w-1/3 md:hidden font-bold">Email</span>
                   {transaction.email}
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">Mobile</span>
+                  <span className="inline-block w-1/3 md:hidden font-bold">Phone Number</span>
+                  {transaction.phoneNumber}
+                </td>
+                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                  <span className="inline-block w-1/3 md:hidden font-bold">Address</span>
                   {transaction.address}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <Pagination currentPage={currentPage} totalPages={Math.ceil(transaction.length / itemsPerPage)} onPageChange={onPageChange} />
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
     </div>
   );

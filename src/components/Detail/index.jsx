@@ -1,17 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchGetProfileByUid, selectProfile } from "../../store/profileSlice";
 import Cookies from "js-cookie";
 import Modal from "../Modal";
+import { APIInvoices } from "../../apis/APIInvoices";
+import { APIProfiles } from "../../apis/APIProfiles";
+import { useNavigate } from "react-router-dom";
 
 function Detail({ product }) {
+  const initialValue = {
+    name: "",
+    email: "",
+    phoneNumber: "",
+    address: "",
+  };
+  const uid = Cookies.get("localId");
+  const dispatch = useDispatch();
+  const profile = useSelector(selectProfile);
+  const Navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const [localId, setLocalId] = useState("");
-  const [data, setData] = useState({
-    name: "",
-    email: "",
-    address: "",
-  });
+  const [formData, setFormData] = useState(initialValue);
+  const userProfile = profile.data[0];
+
+  useEffect(() => {
+    dispatch(fetchGetProfileByUid(uid));
+  }, [dispatch, uid]);
 
   const openModal = (imageUrl) => {
     setSelectedImage(imageUrl);
@@ -33,27 +48,37 @@ function Detail({ product }) {
 
   const handleInput = (e) => {
     const { name, value } = e.target;
-    setData({ ...data, [name]: value });
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = {
-      uid: localId,
-      carName: product.productName,
-      category: product.category,
-      ...data,
+
+    const filledProfileData = profile.data[0];
+
+    const invoiceData = {
+      uid: uid,
+      carName: product.carName,
+      carCategory: product.carCategory,
+      carImage: product.carImage,
+      price: product.price,
+      ...(filledProfileData ? { ...filledProfileData } : { ...formData }),
     };
-    console.log("Data yang dikirim:", formData);
-  };
 
-  useEffect(() => {
-    const localIdFromCookie = Cookies.get("localId");
+    const profileData = {
+      uid: uid,
+      ...formData,
+    };
 
-    if (localIdFromCookie) {
-      setLocalId(localIdFromCookie);
+    if (!filledProfileData) {
+      await APIProfiles.addProfile(profileData);
     }
-  }, []);
+
+    const response = await APIInvoices.addInvoice(invoiceData);
+    console.log("Data yang dikirim:", invoiceData);
+    console.log("Response from addProduct:", response);
+    Navigate("/my-order");
+  };
 
   return (
     <div className="max-w-screen-xl w-full mx-auto overflow-hidden py-11">
@@ -63,12 +88,12 @@ function Detail({ product }) {
             {modalOpen && <Modal selectedImage={selectedImage} closeModal={closeModal} />}
             <div className="overflow-hidden">
               <div className="relative border hover:border-blue-300 mb-6 lg:mb-10 lg:h-2/4 cursor-pointer">
-                <img src={product.url} alt="" className="object-cover h-[20rem] w-full " onClick={() => openModal(product.url)} />
+                <img src={product?.carImage} alt="" className="object-cover h-[20rem] w-full " onClick={() => openModal(product.carImage)} />
               </div>
               <div className="flex-wrap hidden md:flex justify-between">
                 <div className="w-1/2 sm:w-[11rem] cursor-pointer">
                   <a className="block border hover:border-blue-300">
-                    <img src={product.url} alt="" className="object-cover w-full lg:h-[7rem]" onClick={() => openModal(product.url)} />
+                    <img src={product?.url} alt="" className="object-cover w-full lg:h-[7rem]" onClick={() => openModal(product.url)} />
                   </a>
                 </div>
                 <div className="w-1/2 sm:w-[11rem] cursor-pointer">
@@ -87,7 +112,7 @@ function Detail({ product }) {
                 </div>
                 <div className="w-1/2 sm:w-[11rem] cursor-pointer">
                   <a className="block border hover:border-blue-300">
-                    <img src={product.url} alt="" className="object-cover w-full lg:h-[7rem]" onClick={() => openModal(product.url)} />
+                    <img src={product?.url} alt="" className="object-cover w-full lg:h-[7rem]" onClick={() => openModal(product.url)} />
                   </a>
                 </div>
               </div>
@@ -95,15 +120,11 @@ function Detail({ product }) {
           </div>
           <div className="w-full py-4 px-[2rem] md:w-1/2 bg-gray-100 flex flex-col justify-between">
             <div>
-              <h2 className="max-w-xl mt-2 mb-1 text-2xl font-bold md:text-4xl">{product.productName}</h2>
-              <span className="text-lg font-bold text-red-500">{product.category}</span>
-              <p className="max-w-full mb-6 mt-6 text-gray-700 text-justify">
-                Lorem ispum dor amet Lorem ispum dor amet Lorem ispum dor amet Lorem ispum dor amet Lorem ispum dor amet Lorem ispum dor amet Lorem
-                ispum dor amet Lorem ispum dor amet Lorem ispum dor amet Lorem ispum dor amet Lorem ispum dor amet Lorem ispum dor amet Lorem ispum
-                ispum dor amet Lorem ispum dor amet Lorem ispum dor amet Lorem ispum dor amet Lorem ispum dor amet Lorem ispum dor amet Lorem ispum
-              </p>
+              <h2 className="max-w-xl mt-2 mb-1 text-2xl font-bold md:text-4xl">{product?.carName}</h2>
+              <span className="text-lg font-bold text-red-500">{product?.carCategory}</span>
+              <p className="max-w-full mb-6 mt-6 text-gray-700 text-justify">{product?.add}</p>
               <p className="inline-block text-4xl font-bold text-gray-700">
-                <span>{product.price}</span>
+                <span>{product?.description}</span>
               </p>
               <p className="text-green-600 mt-2 mb-1">In Stock</p>
             </div>
@@ -123,20 +144,6 @@ function Detail({ product }) {
         {/* Form */}
         {showForm && (
           <form onSubmit={handleSubmit}>
-            <div className="hidden my-6">
-              <label htmlFor="uid" className="block mb-2 text-sm font-medium text-gray-900">
-                UID
-              </label>
-              <input
-                type="text"
-                id="uid"
-                name="uid"
-                className="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                value={localId}
-                disabled
-                required
-              />
-            </div>
             <div className="my-6">
               <label htmlFor="carName" className="block mb-2 text-sm font-medium text-gray-900">
                 Car Name
@@ -146,21 +153,21 @@ function Detail({ product }) {
                 id="carName"
                 name="carName"
                 className="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                value={product.productName}
+                value={product?.carName}
                 disabled
                 required
               />
             </div>
             <div className="mb-6">
               <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900">
-                Category
+                Price
               </label>
               <input
                 type="text"
                 id="category"
                 name="category"
                 className="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                value={product.category}
+                value={product?.price}
                 disabled
                 required
               />
@@ -173,10 +180,13 @@ function Detail({ product }) {
                 type="text"
                 id="name"
                 name="name"
-                value={data.name}
-                onChange={handleInput}
-                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                value={userProfile?.name || formData.name}
+                onChange={userProfile ? null : handleInput} // Hapus onChange jika profileData adalah true
+                className={`bg-${
+                  userProfile ? "gray-200" : "white"
+                } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
+                disabled={userProfile ? true : false}
               />
             </div>
             <div className="mb-6">
@@ -187,10 +197,30 @@ function Detail({ product }) {
                 type="email"
                 id="email"
                 name="email"
-                value={data.email}
-                onChange={handleInput}
-                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                value={userProfile?.email || formData.email}
+                onChange={userProfile ? null : handleInput} // Hapus onChange jika profileData adalah true
+                className={`bg-${
+                  userProfile ? "gray-200" : "white"
+                } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
+                disabled={userProfile ? true : false}
+              />
+            </div>
+            <div className="mb-6">
+              <label htmlFor="phoneNumber" className="block mb-2 text-sm font-medium text-gray-900">
+                Phone Number
+              </label>
+              <input
+                type="number"
+                id="phoneNumber"
+                name="phoneNumber"
+                value={userProfile?.phoneNumber || formData.phoneNumber}
+                onChange={userProfile ? null : handleInput} // Hapus onChange jika profileData adalah true
+                className={`bg-${
+                  userProfile ? "gray-200" : "white"
+                } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
+                required
+                disabled={userProfile ? true : false}
               />
             </div>
             <div className="mb-6">
@@ -201,10 +231,13 @@ function Detail({ product }) {
                 type="text"
                 id="address"
                 name="address"
-                value={data.address}
-                onChange={handleInput}
-                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                value={userProfile?.address || formData.address}
+                onChange={userProfile ? null : handleInput} // Hapus onChange jika profileData adalah true
+                className={`bg-${
+                  userProfile ? "gray-200" : "white"
+                } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
+                disabled={userProfile ? true : false}
               />
             </div>
             <div className="flex flex-row gap-3">
