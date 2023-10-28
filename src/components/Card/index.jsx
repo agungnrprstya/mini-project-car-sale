@@ -12,10 +12,10 @@ function ProductCard({ product }) {
       <div className="mx-auto w-full max-w-screen-xl pb-[3rem] mb-auto">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-5">
-            {product.data.map((product) => (
+            {product.data.map((product, index) => (
               <div
                 className="cursor-pointer bg-gray-100 rounded-lg shadow-lg p-8 h-full w-full hover:bg-gray-200 hover:scale-105 transition duration-500"
-                key={product.id}
+                key={`${product.id}_${index}`}
               >
                 <div className="relative overflow-hidden group-hover:opacity-75 rounded-lg  ">
                   <img className="object-contain bg-blue-100 h-full w-full lg:h-64 lg:w-64 object-center" src={product.carImage} alt="Product" />

@@ -9,7 +9,6 @@ import Detail from "../../components/Detail";
 
 function DetailProduct() {
   const { id } = useParams();
-  // const id = "2rAEdn3VAyYRiHqIy8PG";
   const dispatch = useDispatch();
   const product = useSelector(selectProduct);
 
