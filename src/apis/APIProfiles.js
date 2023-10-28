@@ -29,7 +29,7 @@ export const APIProfiles = {
       console.log("Console log profiles: ", profiles);
       return profiles;
     } catch (error) {
-      message.error("Gagal mengambil data faktur!");
+      message.error("Gagal mengambil data profile!");
       console.error(error);
     }
   },

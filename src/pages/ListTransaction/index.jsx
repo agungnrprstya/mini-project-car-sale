@@ -17,7 +17,7 @@ function ListTransaction() {
   const invoicesPerPage = 12;
   const startIndex = (currentPage - 1) * invoicesPerPage;
   const endIndex = startIndex + invoicesPerPage;
-  const totalPages = Math.ceil(stateInvoices.data.length / invoicesPerPage);
+  const totalPages = Math.ceil(stateInvoices.data?.length / invoicesPerPage);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -25,7 +25,7 @@ function ListTransaction() {
 
   // Display Product
   const invoicesToDisplay = {
-    data: stateInvoices.data.slice(startIndex, endIndex),
+    data: stateInvoices.data?.slice(startIndex, endIndex),
   };
 
   return (
@@ -44,7 +44,7 @@ function ListTransaction() {
             </tr>
           </thead>
           <tbody className="block md:table-row-group">
-            {invoicesToDisplay.data.map((transaction) => (
+            {invoicesToDisplay.data?.map((transaction) => (
               <tr className="bg-gray-300 border border-grey-500 md:border-none block md:table-row" key={transaction.id}>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                   <span className="inline-block w-1/3 md:hidden font-bold">Car Name</span>

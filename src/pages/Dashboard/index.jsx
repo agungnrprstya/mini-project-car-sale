@@ -65,8 +65,8 @@ function Dashboard() {
             </tr>
           </thead>
           <tbody className="block md:table-row-group">
-            {productsToDisplay.data.map((product) => (
-              <tr key={product.id} className="bg-gray-300 border border-grey-500 md:border-none block md:table-row">
+            {productsToDisplay.data.map((product, index) => (
+              <tr key={`${product.id}_${index}`} className="bg-gray-300 border border-grey-500 md:border-none block md:table-row">
                 <td
                   className="p-2 md:border md:border-grey-500 text-left block md:table-cell cursor-pointer hover:opacity-50"
                   onClick={() => detail(product)}
@@ -80,7 +80,7 @@ function Dashboard() {
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell w-[10rem]">
                   <span className="inline-block w-1/3 md:hidden font-bold">Image</span>
-                  <img src={product.carImage} alt={product.alt} className="w-[10rem] h-20 object-cover" />
+                  <img src={product.carImage} alt={product.alt} className="w-[10rem] h-20 object-fill" />
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                   <span className="inline-block w-1/3 md:hidden font-bold">Description</span>
