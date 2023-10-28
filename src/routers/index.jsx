@@ -1,7 +1,7 @@
 import { React } from "react";
 import { Route, Routes } from "react-router-dom";
 import AdminRoute from "./admin-route";
-import CustomerRoute from "./customer-route";
+import AuthorizedRoute from "./authorized-route";
 import ProtectedRoute from "./protected-route";
 import AddProduct from "../pages/AddProduct";
 import Dashboard from "../pages/Dashboard";
@@ -13,6 +13,7 @@ import LoginPage from "../pages/LoginPage";
 import NotFound from "../pages/NotFound";
 import ProductPage from "../pages/ProductPage";
 import SignUpPage from "../pages/SignUpPage";
+import MyOrder from "../pages/MyOrder";
 
 function RouteManagement() {
   return (
@@ -27,8 +28,9 @@ function RouteManagement() {
         <Route path="/edit-product/:id" element={<EditProduct />} />
         <Route path="/list-transaction" element={<ListTransaction />} />
       </Route>
-      <Route path="/" element={<CustomerRoute />}>
+      <Route path="/" element={<AuthorizedRoute />}>
         <Route path="/product/:id" element={<DetailProduct />} />
+        <Route path="/my-order" element={<MyOrder />} />
       </Route>
       <Route path="/product" element={<ProductPage />} />
       <Route path="/sign-up" element={<SignUpPage />} />
