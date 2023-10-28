@@ -1,32 +1,35 @@
-import React, { useState } from "react";
-import { initialProduct } from "../../data/productData";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import Pagination from "../../components/Pagination";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchGetProducts, selectProducts } from "../../store/productsSlice";
+import { APIProducts } from "../../apis/APIProducts";
 
 function Dashboard() {
   const navigate = useNavigate();
-  const [products, setProducts] = useState(initialProduct);
-  const itemsPerPage = 5; // Set the number of items to display per page
+  const dispatch = useDispatch();
+  const stateProducts = useSelector(selectProducts);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Calculate the range of products to display on the current page
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const displayedProducts = products.slice(startIndex, endIndex);
+  useEffect(() => {
+    dispatch(fetchGetProducts());
+  }, [dispatch]);
 
-  const onPageChange = (page) => {
-    setCurrentPage(page);
+  //Pagination
+  const productsPerPage = 5;
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const endIndex = startIndex + productsPerPage;
+  const totalPages = Math.ceil(stateProducts.data.length / productsPerPage);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
   };
 
-  function deleteProduct(product) {
-    const confirmDelete = window.confirm(`Are you sure you want to delete ${product.productName}?`);
-    if (confirmDelete) {
-      const updatedProducts = products.filter((p) => p.id !== product.id);
-      setProducts(updatedProducts);
-      navigate("/dashboard");
-    }
-  }
+  // Display Product
+  const productsToDisplay = {
+    data: stateProducts.data.slice(startIndex, endIndex),
+  };
 
   function detail(product) {
     navigate(`/product/${product.id}`, { state: { product } });
@@ -62,29 +65,29 @@ function Dashboard() {
             </tr>
           </thead>
           <tbody className="block md:table-row-group">
-            {displayedProducts.map((product) => (
+            {productsToDisplay.data.map((product) => (
               <tr key={product.id} className="bg-gray-300 border border-grey-500 md:border-none block md:table-row">
                 <td
                   className="p-2 md:border md:border-grey-500 text-left block md:table-cell cursor-pointer hover:opacity-50"
                   onClick={() => detail(product)}
                 >
                   <span className="inline-block w-1/3 md:hidden font-bold">Name</span>
-                  {product.productName}
+                  {product.carName}
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">User Name</span>
-                  {product.category}
+                  <span className="inline-block w-1/3 md:hidden font-bold">Category</span>
+                  {product.carCategory}
                 </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell w-[10rem]">
                   <span className="inline-block w-1/3 md:hidden font-bold">Image</span>
-                  <img src={product.url} alt={product.alt} className="w-[10rem] h-20 object-cover" />
+                  <img src={product.carImage} alt={product.alt} className="w-[10rem] h-20 object-cover" />
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">Mobile</span>
-                  {product.alt}
+                  <span className="inline-block w-1/3 md:hidden font-bold">Description</span>
+                  {product.description}
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">Mobile</span>
+                  <span className="inline-block w-1/3 md:hidden font-bold">Price</span>
                   {product.price}
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left md:table-cell">
@@ -92,7 +95,10 @@ function Dashboard() {
                   <a className="font-medium text-blue-600 hover:underline mr-3 cursor-pointer" onClick={() => edit(product)}>
                     Edit
                   </a>
-                  <a className="font-medium text-red-600 hover:underline cursor-pointer" onClick={() => deleteProduct(product)}>
+                  <a
+                    className="font-medium text-red-600 hover:underline cursor-pointer"
+                    onClick={() => APIProducts.deleteProduct(product.id).then(() => navigate(0))}
+                  >
                     Delete
                   </a>
                 </td>
@@ -101,7 +107,7 @@ function Dashboard() {
           </tbody>
         </table>
         <div className="relative pt-[2rem] right-[50%] transform translate-x-1/2">
-          <Pagination currentPage={currentPage} totalPages={Math.ceil(products.length / itemsPerPage)} onPageChange={onPageChange} />
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
         </div>
       </div>
     </div>
