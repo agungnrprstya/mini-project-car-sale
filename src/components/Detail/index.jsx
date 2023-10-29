@@ -34,10 +34,12 @@ function Detail({ product, profile, uid }) {
       .max(100, "Email must not exceed 100 characters")
       .trim(),
     phoneNumber: yup
-      .number()
-      .typeError("Phone Number is required")
-      .min(0, "Phone Number must be greater than 0")
-      .max(15, "Phone Number must not exceed 15 characters"),
+      .string()
+      .required("Phone Number is required")
+      .matches(/^\d+$/, "Phone Number is invalid")
+      .min(8, "Phone Number must be at least 8 characters")
+      .max(15, "Phone Number must not exceed 15 characters")
+      .trim(),
     address: yup.string().required("Address is required").max(100, "Address must not exceed 100 characters").trim(),
   });
 

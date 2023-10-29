@@ -31,6 +31,7 @@ export const APIAuth = {
       await createUserWithEmailAndPassword(auth, email, password);
     } catch (err) {
       console.error(err);
+      throw new Error(err);
     }
   },
 
