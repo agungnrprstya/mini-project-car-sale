@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import * as yup from "yup";
 import { APIInvoices } from "../../apis/APIInvoices";
 import { APIProfiles } from "../../apis/APIProfiles";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import Modal from "../Modal";
 
 function Detail({ product, profile, uid }) {
@@ -16,6 +19,33 @@ function Detail({ product, profile, uid }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState(initialValue);
+
+  const validationSchema = yup.object().shape({
+    name: yup
+      .string()
+      .required("Name is required")
+      .max(25, "Name must not exceed 25 characters")
+      .matches(/^[a-zA-Z0-9\s]*$/, "Name must not contain symbols")
+      .trim(),
+    email: yup
+      .string()
+      .required("Email is required")
+      .email("Please enter a valid email address")
+      .max(100, "Email must not exceed 100 characters")
+      .trim(),
+    phoneNumber: yup
+      .number()
+      .typeError("Phone Number is required")
+      .min(0, "Phone Number must be greater than 0")
+      .max(15, "Phone Number must not exceed 15 characters"),
+    address: yup.string().required("Address is required").max(100, "Address must not exceed 100 characters").trim(),
+  });
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(validationSchema) });
 
   const openModal = (imageUrl) => {
     setSelectedImage(imageUrl);
@@ -40,9 +70,7 @@ function Detail({ product, profile, uid }) {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const onSubmit = async () => {
     const filledProfileData = profile;
 
     const invoiceData = {
@@ -140,7 +168,7 @@ function Detail({ product, profile, uid }) {
 
         {/* Form */}
         {showForm && (
-          <form onSubmit={handleSubmit}>
+          <form noValidate onSubmit={handleSubmit(onSubmit)}>
             <div className="my-6">
               <label htmlFor="carName" className="block mb-2 text-sm font-medium text-gray-900">
                 Car Name
@@ -152,7 +180,6 @@ function Detail({ product, profile, uid }) {
                 className="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 value={product?.carName}
                 disabled
-                required
               />
             </div>
             <div className="mb-6">
@@ -166,7 +193,6 @@ function Detail({ product, profile, uid }) {
                 className="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 value={product?.carPrice}
                 disabled
-                required
               />
             </div>
             <div className="mb-6">
@@ -174,6 +200,7 @@ function Detail({ product, profile, uid }) {
                 Name
               </label>
               <input
+                {...register("name")}
                 type="text"
                 id="name"
                 name="name"
@@ -183,14 +210,17 @@ function Detail({ product, profile, uid }) {
                   profile ? "gray-200" : "white"
                 } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
-                disabled={profile ? true : false}
               />
+              <p type="invalid" className="text-red-500">
+                {errors.name?.message}
+              </p>
             </div>
             <div className="mb-6">
               <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">
                 Email
               </label>
               <input
+                {...register("email")}
                 type="email"
                 id="email"
                 name="email"
@@ -200,14 +230,17 @@ function Detail({ product, profile, uid }) {
                   profile ? "gray-200" : "white"
                 } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
-                disabled={profile ? true : false}
               />
+              <p type="invalid" className="text-red-500">
+                {errors.email?.message}
+              </p>
             </div>
             <div className="mb-6">
               <label htmlFor="phoneNumber" className="block mb-2 text-sm font-medium text-gray-900">
                 Phone Number
               </label>
               <input
+                {...register("phoneNumber")}
                 type="number"
                 id="phoneNumber"
                 name="phoneNumber"
@@ -217,14 +250,17 @@ function Detail({ product, profile, uid }) {
                   profile ? "gray-200" : "white"
                 } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
-                disabled={profile ? true : false}
               />
+              <p type="invalid" className="text-red-500">
+                {errors.phoneNumber?.message}
+              </p>
             </div>
             <div className="mb-6">
               <label htmlFor="address" className="block mb-2 text-sm font-medium text-gray-900">
                 Address
               </label>
               <input
+                {...register("address")}
                 type="text"
                 id="address"
                 name="address"
@@ -234,8 +270,10 @@ function Detail({ product, profile, uid }) {
                   profile ? "gray-200" : "white"
                 } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
-                disabled={profile ? true : false}
               />
+              <p type="invalid" className="text-red-500">
+                {errors.address?.message}
+              </p>
             </div>
             <div className="flex flex-row gap-3">
               <button

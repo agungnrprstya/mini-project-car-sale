@@ -11,9 +11,17 @@ function EditProduct() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const product = useSelector(selectProduct);
-  console.log(product);
+  const [data, setData] = useState({
+    carName: product.data?.carName,
+    carCategory: product.data?.carCategory,
+    carImage: product.data?.carImage,
+    carDescription: product.data?.carDescription,
+    carPrice: product.data?.carPrice,
+  });
 
-  const [data, setData] = useState({});
+  useEffect(() => {
+    dispatch(fetchGetProductById(id));
+  }, [dispatch, id]);
 
   useEffect(() => {
     setData({
@@ -24,10 +32,6 @@ function EditProduct() {
       carPrice: product.data?.carPrice,
     });
   }, [product]);
-
-  useEffect(() => {
-    dispatch(fetchGetProductById(id));
-  }, [dispatch, id]);
 
   const handleInput = (e) => {
     const { name, type } = e.target;
@@ -41,17 +45,16 @@ function EditProduct() {
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async () => {
     try {
       await APIProducts.editProduct(id, {
-        carName: data.carName,
-        carCategory: data.carCategory,
-        carImage: data.carImage,
-        carDescription: data.carDescription,
-        carPrice: data.carPrice,
+        carName: data?.carName,
+        carCategory: data?.carCategory,
+        carImage: data?.carImage,
+        carDescription: data?.carDescription,
+        carPrice: data?.carPrice,
       });
-      console.log("Data yang dikirim:", data);
+      console.log("Data yang dikirim:", product?.data);
       navigate("/dashboard");
     } catch (error) {
       console.error("Error updating product: ", error);
@@ -61,7 +64,7 @@ function EditProduct() {
   return (
     <div className="flex flex-row">
       <Sidebar />
-      <Form data={data} handleInput={handleInput} handleSubmit={handleSubmit} />
+      <Form data={data} product={product} handleInput={handleInput} onSubmit={onSubmit} />
     </div>
   );
 }
