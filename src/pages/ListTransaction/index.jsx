@@ -17,7 +17,7 @@ function ListTransaction() {
   const invoicesPerPage = 12;
   const startIndex = (currentPage - 1) * invoicesPerPage;
   const endIndex = startIndex + invoicesPerPage;
-  const totalPages = Math.ceil(stateInvoices.data?.length / invoicesPerPage);
+  const totalPages = Math.ceil(stateInvoices.data.length / invoicesPerPage);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);

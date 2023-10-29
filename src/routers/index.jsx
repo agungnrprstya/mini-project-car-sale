@@ -19,6 +19,9 @@ function RouteManagement() {
   return (
     <Routes>
       <Route index element={<LandingPage />} />
+      <Route path="/product" element={<ProductPage />} />
+      <Route path="/sign-up" element={<SignUpPage />} />
+      <Route path="*" element={<NotFound />} />
       <Route path="/login" element={<ProtectedRoute />}>
         <Route path="/login" element={<LoginPage />} />
       </Route>
@@ -32,9 +35,6 @@ function RouteManagement() {
         <Route path="/product/:id" element={<DetailProduct />} />
         <Route path="/my-order" element={<MyOrder />} />
       </Route>
-      <Route path="/product" element={<ProductPage />} />
-      <Route path="/sign-up" element={<SignUpPage />} />
-      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

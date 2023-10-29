@@ -25,7 +25,7 @@ function LandingPage() {
 
   // Slice the first 4 shuffled products
   const displayedProducts = { ...shuffledProducts };
-  displayedProducts.data = displayedProducts.data.slice(0, 4);
+  displayedProducts.data = displayedProducts.data?.slice(0, 4);
 
   console.log(displayedProducts);
 

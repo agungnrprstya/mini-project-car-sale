@@ -21,7 +21,7 @@ function ProductPage() {
   const productsPerPage = 8;
   const startIndex = (currentPage - 1) * productsPerPage;
   const endIndex = startIndex + productsPerPage;
-  const totalPages = Math.ceil(stateProducts.data.length / productsPerPage);
+  const totalPages = Math.ceil(stateProducts.data?.length / productsPerPage);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -35,16 +35,17 @@ function ProductPage() {
 
   // Display Product
   const data = { ...stateProducts }; // Clone the data object
+
   const filteredProducts =
     selectedCategory === "All"
       ? data
       : {
           ...data,
-          data: data.data.filter((product) => product.carCategory === selectedCategory),
+          data: data.data?.filter((product) => product.carCategory === selectedCategory),
         };
   const productsToDisplay = {
     ...filteredProducts,
-    data: filteredProducts.data.slice(startIndex, endIndex),
+    data: filteredProducts.data?.slice(startIndex, endIndex),
   };
 
   console.log(productsToDisplay);
