@@ -18,18 +18,16 @@ function AddProduct() {
   const [data, setData] = useState(initialValue);
 
   const handleInput = (e) => {
-    const { name, type } = e.target;
-    if (type === "file") {
+    const { name, value } = e.target;
+    if (name === "carImage") {
       const file = e.target.files[0];
       setData({ ...data, carImage: file });
     } else {
-      const value = e.target.value;
       setData({ ...data, [name]: value });
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async () => {
     const formData = {
       ...data,
     };
@@ -46,7 +44,7 @@ function AddProduct() {
   return (
     <div className="flex flex-row">
       <Sidebar />
-      <Form data={data} handleInput={handleInput} handleSubmit={handleSubmit} />
+      <Form data={data} handleInput={handleInput} onSubmit={onSubmit} />
     </div>
   );
 }

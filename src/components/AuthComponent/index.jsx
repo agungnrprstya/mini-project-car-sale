@@ -1,15 +1,34 @@
 import React, { useState } from "react";
+import * as yup from "yup";
+import { Link } from "react-router-dom";
 import { APIAuth } from "../../apis/APIAuth";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 function AuthComponent({ isLoginPage }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleAuth = async (e) => {
-    e.preventDefault();
+  const validationSchema = yup.object().shape({
+    email: yup
+      .string()
+      .required("Email is required")
+      .email("Please enter a valid email address")
+      .max(100, "Email must not exceed 100 characters")
+      .trim(),
+    password: yup.string().required("Password is required").min(8, "Password must be at least 8 characters").trim(),
+  });
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(validationSchema) });
+
+  const handleAuth = async () => {
     try {
       if (isLoginPage) {
         await APIAuth.signInWithCredentials({ email, password });
@@ -21,7 +40,7 @@ function AuthComponent({ isLoginPage }) {
         navigate("/login");
       }
     } catch (error) {
-      message.error(isLoginPage ? "Login failed. Your email or password is wrong!" : "Sign up failed. Please try again.");
+      message.error(isLoginPage ? "Login failed. Your email or password is incorrect!" : "Email is already in use.");
     }
   };
 
@@ -49,13 +68,14 @@ function AuthComponent({ isLoginPage }) {
         <h2 className="mt-10 text-center text-3xl font-extrabold">{authActionText} to your account</h2>
         <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form className="space-y-6" onSubmit={handleAuth}>
+            <form className="space-y-6" noValidate onSubmit={handleSubmit(handleAuth)}>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-white-300">
                   Email address
                 </label>
                 <div className="mt-1">
                   <input
+                    {...register("email")}
                     id="email"
                     name="email"
                     type="email"
@@ -66,6 +86,9 @@ function AuthComponent({ isLoginPage }) {
                     className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-700 placeholder-gray-500 text-slate-950 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                     placeholder="Enter your email address"
                   />
+                  <p type="invalid" className="text-red-500">
+                    {errors.email?.message}
+                  </p>
                 </div>
               </div>
               <div>
@@ -74,6 +97,7 @@ function AuthComponent({ isLoginPage }) {
                 </label>
                 <div className="mt-1">
                   <input
+                    {...register("password")}
                     id="password"
                     name="password"
                     type="password"
@@ -84,6 +108,9 @@ function AuthComponent({ isLoginPage }) {
                     className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-700 placeholder-gray-500 text-slate-950 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                     placeholder="Enter your password"
                   />
+                  <p type="invalid" className="text-red-500">
+                    {errors.password?.message}
+                  </p>
                 </div>
               </div>
 
@@ -116,6 +143,14 @@ function AuthComponent({ isLoginPage }) {
                 </div>
               </div>
             </div>
+            {isLoginPage && (
+              <p className="mt-5 text-center">
+                Don&apos;t have an account?{" "}
+                <Link to="/sign-up" className="text-blue-500 hover:opacity-50">
+                  Sign up
+                </Link>
+              </p>
+            )}
           </div>
         </div>
       </div>
