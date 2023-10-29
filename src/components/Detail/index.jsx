@@ -1,37 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchGetProfileByUid, selectProfile } from "../../store/profileSlice";
-import Cookies from "js-cookie";
-import Modal from "../Modal";
+import React, { useState } from "react";
 import { APIInvoices } from "../../apis/APIInvoices";
 import { APIProfiles } from "../../apis/APIProfiles";
 import { useNavigate } from "react-router-dom";
+import Modal from "../Modal";
 
-function Detail({ product }) {
+function Detail({ product, profile, uid }) {
   const initialValue = {
     name: "",
     email: "",
     phoneNumber: "",
     address: "",
   };
-  const uid = Cookies.get("localId");
-  const dispatch = useDispatch();
-  const profile = useSelector(selectProfile);
   const Navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState(initialValue);
-
-  const mapProfileData = profile.data?.map((profile) => {
-    return profile;
-  });
-
-  console.log("Map Profie Data:", mapProfileData);
-
-  useEffect(() => {
-    dispatch(fetchGetProfileByUid(uid));
-  }, [dispatch, uid]);
 
   const openModal = (imageUrl) => {
     setSelectedImage(imageUrl);
@@ -59,7 +43,7 @@ function Detail({ product }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const filledProfileData = mapProfileData[0];
+    const filledProfileData = profile;
 
     const invoiceData = {
       uid: uid,
@@ -185,13 +169,13 @@ function Detail({ product }) {
                 type="text"
                 id="name"
                 name="name"
-                value={mapProfileData[0]?.name || formData.name}
-                onChange={mapProfileData[0] ? null : handleInput} // Hapus onChange jika profileData adalah true
+                value={profile?.name || formData.name}
+                onChange={profile ? null : handleInput} // Hapus onChange jika profileData adalah true
                 className={`bg-${
-                  mapProfileData[0] ? "gray-200" : "white"
+                  profile ? "gray-200" : "white"
                 } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
-                disabled={mapProfileData[0] ? true : false}
+                disabled={profile ? true : false}
               />
             </div>
             <div className="mb-6">
@@ -202,13 +186,13 @@ function Detail({ product }) {
                 type="email"
                 id="email"
                 name="email"
-                value={mapProfileData[0]?.email || formData.email}
-                onChange={mapProfileData[0] ? null : handleInput} // Hapus onChange jika profileData adalah true
+                value={profile?.email || formData.email}
+                onChange={profile ? null : handleInput} // Hapus onChange jika profileData adalah true
                 className={`bg-${
-                  mapProfileData[0] ? "gray-200" : "white"
+                  profile ? "gray-200" : "white"
                 } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
-                disabled={mapProfileData[0] ? true : false}
+                disabled={profile ? true : false}
               />
             </div>
             <div className="mb-6">
@@ -219,13 +203,13 @@ function Detail({ product }) {
                 type="number"
                 id="phoneNumber"
                 name="phoneNumber"
-                value={mapProfileData[0]?.phoneNumber || formData.phoneNumber}
-                onChange={mapProfileData[0] ? null : handleInput} // Hapus onChange jika profileData adalah true
+                value={profile?.phoneNumber || formData.phoneNumber}
+                onChange={profile ? null : handleInput} // Hapus onChange jika profileData adalah true
                 className={`bg-${
-                  mapProfileData[0] ? "gray-200" : "white"
+                  profile ? "gray-200" : "white"
                 } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
-                disabled={mapProfileData[0] ? true : false}
+                disabled={profile ? true : false}
               />
             </div>
             <div className="mb-6">
@@ -236,13 +220,13 @@ function Detail({ product }) {
                 type="text"
                 id="address"
                 name="address"
-                value={mapProfileData[0]?.address || formData.address}
-                onChange={mapProfileData[0] ? null : handleInput} // Hapus onChange jika profileData adalah true
+                value={profile?.address || formData.address}
+                onChange={profile ? null : handleInput} // Hapus onChange jika profileData adalah true
                 className={`bg-${
-                  mapProfileData[0] ? "gray-200" : "white"
+                  profile ? "gray-200" : "white"
                 } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
-                disabled={mapProfileData[0] ? true : false}
+                disabled={profile ? true : false}
               />
             </div>
             <div className="flex flex-row gap-3">
