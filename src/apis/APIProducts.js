@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, getDoc, addDoc, deleteDoc } from "firebase/firestore";
+import { collection, doc, getDocs, getDoc, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../configs/firebase";
 import { message } from "antd";
@@ -63,6 +63,36 @@ export const APIProducts = {
       return "Successfully deleted product!";
     } catch (e) {
       console.error("Error deleting document: ", e);
+      throw new Error(e);
+    }
+  },
+
+  editProduct: async (id, product) => {
+    try {
+      const productRef = doc(db, "products", id);
+
+      // Get the file name from the new image
+      const fileName = product.carImage.name;
+
+      // Upload the new image to Firebase Storage
+      const imageRef = ref(storage, `carImage/${fileName}`);
+      const uploadTask = uploadBytes(imageRef, product.carImage);
+
+      await uploadTask;
+
+      const downloadURL = await getDownloadURL(imageRef);
+
+      // Update the product object with the new download URL
+      product.carImage = downloadURL;
+
+      // Remove the carImage property from the product to prevent overwriting the image
+      const { ...updatedProduct } = product;
+
+      await updateDoc(productRef, updatedProduct);
+
+      return "Successfully updated product!";
+    } catch (e) {
+      console.error("Error updating document: ", e);
       throw new Error(e);
     }
   },

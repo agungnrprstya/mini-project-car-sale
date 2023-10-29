@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 
 const authentication = {
   isAuthorizedAdmin() {
-    if (this.getLocalId() && this.getToken()) return true;
+    if (this.getLocalId()) return true;
     return false;
   },
 
@@ -40,7 +40,6 @@ const authentication = {
     try {
       await signOut(auth);
       this.clearCredentialsFromCookie();
-      window.location.href = "/";
     } catch (err) {
       console.error(err);
     }

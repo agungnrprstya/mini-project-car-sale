@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { APIAuth } from "../../apis/APIAuth";
+import { useNavigate } from "react-router";
 import authentication from "../../utils/authentication";
 
-const logout = async () => {
-  await APIAuth.signOut();
-};
-
 function Navbar() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  const logout = async () => {
+    setLoading(true);
+    try {
+      await APIAuth.signOut();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      navigate("/");
+    } catch (error) {
+      console.error("Gagal logout: ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="bg-white">
       <nav className="mx-auto w-full max-w-7xl relative py-4 flex justify-between items-center bg-white">
@@ -85,7 +97,7 @@ function Navbar() {
             className="cursor-pointer hidden lg:inline-block py-2 px-6 bg-red-500 hover:bg-red-600 text-sm text-white font-bold rounded-xl transition duration-200"
             onClick={logout}
           >
-            Logout
+            {loading ? "Logging out..." : "Logout"}
           </a>
         ) : (
           <a

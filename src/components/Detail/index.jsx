@@ -1,37 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchGetProfileByUid, selectProfile } from "../../store/profileSlice";
-import Cookies from "js-cookie";
-import Modal from "../Modal";
+import React, { useState } from "react";
 import { APIInvoices } from "../../apis/APIInvoices";
 import { APIProfiles } from "../../apis/APIProfiles";
 import { useNavigate } from "react-router-dom";
+import Modal from "../Modal";
 
-function Detail({ product }) {
+function Detail({ product, profile, uid }) {
   const initialValue = {
     name: "",
     email: "",
     phoneNumber: "",
     address: "",
   };
-  const uid = Cookies.get("localId");
-  const dispatch = useDispatch();
-  const profile = useSelector(selectProfile);
   const Navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState(initialValue);
-
-  const mapProfileData = profile.data?.map((profile) => {
-    return profile;
-  });
-
-  console.log("Map Profie Data:", mapProfileData);
-
-  useEffect(() => {
-    dispatch(fetchGetProfileByUid(uid));
-  }, [dispatch, uid]);
 
   const openModal = (imageUrl) => {
     setSelectedImage(imageUrl);
@@ -59,14 +43,15 @@ function Detail({ product }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const filledProfileData = mapProfileData[0];
+    const filledProfileData = profile;
 
     const invoiceData = {
       uid: uid,
       carName: product.carName,
-      carCategory: product.carCategory,
       carImage: product.carImage,
-      price: product.price,
+      carCategory: product.carCategory,
+      carDescription: product.carDescription,
+      carPrice: product.carPrice,
       ...(filledProfileData ? { ...filledProfileData } : { ...formData }),
     };
 
@@ -127,9 +112,16 @@ function Detail({ product }) {
             <div>
               <h2 className="max-w-xl mt-2 mb-1 text-2xl font-bold md:text-4xl">{product?.carName}</h2>
               <span className="text-lg font-bold text-red-500">{product?.carCategory}</span>
-              <p className="max-w-full mb-6 mt-6 text-gray-700 text-justify">{product?.add}</p>
+              <p className="max-w-full mb-6 mt-6 text-gray-700 text-justify">
+                {product?.carDescription} Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos voluptates velit optio doloremque quam.
+                Modi debitis esse laborum consectetur, tenetur similique libero sit cumque nobis atque iste alias corporis pariatur dolore maxime! Cum
+                fugit neque dolor error accusantium pariatur rerum, animi molestiae eum quo voluptatibus earum a tempora soluta consectetur dolorem
+                eius, illum quidem. Eaque reprehenderit accusantium qui, blanditiis repellendus ab, cupiditate inventore cum voluptates rem deleniti
+                ea corrupti nulla optio, rerum quod ex temporibus iste! Voluptas dolorum quo quaerat? Itaque praesentium nihil ad illum explicabo est
+                velit accusamus! Omnis, quam. Eligendi, non illum? Deleniti, totam vel? Libero, tempora vitae.
+              </p>
               <p className="inline-block text-4xl font-bold text-gray-700">
-                <span>{product?.description}</span>
+                <span>{product?.carPrice}</span>
               </p>
               <p className="text-green-600 mt-2 mb-1">In Stock</p>
             </div>
@@ -169,10 +161,10 @@ function Detail({ product }) {
               </label>
               <input
                 type="text"
-                id="category"
-                name="category"
+                id="carPrice"
+                name="carPrice"
                 className="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                value={product?.price}
+                value={product?.carPrice}
                 disabled
                 required
               />
@@ -185,13 +177,13 @@ function Detail({ product }) {
                 type="text"
                 id="name"
                 name="name"
-                value={mapProfileData[0]?.name || formData.name}
-                onChange={mapProfileData[0] ? null : handleInput} // Hapus onChange jika profileData adalah true
+                value={profile?.name || formData.name}
+                onChange={profile ? null : handleInput} // Hapus onChange jika profileData adalah true
                 className={`bg-${
-                  mapProfileData[0] ? "gray-200" : "white"
+                  profile ? "gray-200" : "white"
                 } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
-                disabled={mapProfileData[0] ? true : false}
+                disabled={profile ? true : false}
               />
             </div>
             <div className="mb-6">
@@ -202,13 +194,13 @@ function Detail({ product }) {
                 type="email"
                 id="email"
                 name="email"
-                value={mapProfileData[0]?.email || formData.email}
-                onChange={mapProfileData[0] ? null : handleInput} // Hapus onChange jika profileData adalah true
+                value={profile?.email || formData.email}
+                onChange={profile ? null : handleInput} // Hapus onChange jika profileData adalah true
                 className={`bg-${
-                  mapProfileData[0] ? "gray-200" : "white"
+                  profile ? "gray-200" : "white"
                 } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
-                disabled={mapProfileData[0] ? true : false}
+                disabled={profile ? true : false}
               />
             </div>
             <div className="mb-6">
@@ -219,13 +211,13 @@ function Detail({ product }) {
                 type="number"
                 id="phoneNumber"
                 name="phoneNumber"
-                value={mapProfileData[0]?.phoneNumber || formData.phoneNumber}
-                onChange={mapProfileData[0] ? null : handleInput} // Hapus onChange jika profileData adalah true
+                value={profile?.phoneNumber || formData.phoneNumber}
+                onChange={profile ? null : handleInput} // Hapus onChange jika profileData adalah true
                 className={`bg-${
-                  mapProfileData[0] ? "gray-200" : "white"
+                  profile ? "gray-200" : "white"
                 } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
-                disabled={mapProfileData[0] ? true : false}
+                disabled={profile ? true : false}
               />
             </div>
             <div className="mb-6">
@@ -236,13 +228,13 @@ function Detail({ product }) {
                 type="text"
                 id="address"
                 name="address"
-                value={mapProfileData[0]?.address || formData.address}
-                onChange={mapProfileData[0] ? null : handleInput} // Hapus onChange jika profileData adalah true
+                value={profile?.address || formData.address}
+                onChange={profile ? null : handleInput} // Hapus onChange jika profileData adalah true
                 className={`bg-${
-                  mapProfileData[0] ? "gray-200" : "white"
+                  profile ? "gray-200" : "white"
                 } border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                 required
-                disabled={mapProfileData[0] ? true : false}
+                disabled={profile ? true : false}
               />
             </div>
             <div className="flex flex-row gap-3">
