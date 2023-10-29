@@ -24,7 +24,7 @@ function ProductCard({ product }) {
                 <h3 className="text-xl font-bold text-gray-900 mt-4">{product.carName}</h3>
                 <p className="text-gray-500 text-sm mt-2">{product.alt}</p>
                 <div className="flex items-center justify-between mt-4">
-                  <span className="text-gray-900 font-bold text-lg">{product.price}</span>
+                  <span className="text-gray-900 font-bold text-lg">{product.carPrice}</span>
                   <button onClick={() => detail(product)} className="bg-gray-900 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800">
                     Detail
                   </button>

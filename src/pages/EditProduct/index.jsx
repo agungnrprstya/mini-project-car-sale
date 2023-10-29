@@ -20,8 +20,8 @@ function EditProduct() {
       carName: product.data?.carName,
       carCategory: product.data?.carCategory,
       carImage: product.data?.carImage,
-      description: product.data?.description,
-      price: product.data?.price,
+      carDescription: product.data?.carDescription,
+      carPrice: product.data?.carPrice,
     });
   }, [product]);
 
@@ -48,8 +48,8 @@ function EditProduct() {
         carName: data.carName,
         carCategory: data.carCategory,
         carImage: data.carImage,
-        description: data.description,
-        price: data.price,
+        carDescription: data.carDescription,
+        carPrice: data.carPrice,
       });
       console.log("Data yang dikirim:", data);
       navigate("/dashboard");

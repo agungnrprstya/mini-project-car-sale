@@ -48,9 +48,10 @@ function Detail({ product, profile, uid }) {
     const invoiceData = {
       uid: uid,
       carName: product.carName,
-      carCategory: product.carCategory,
       carImage: product.carImage,
-      price: product.price,
+      carCategory: product.carCategory,
+      carDescription: product.carDescription,
+      carPrice: product.carPrice,
       ...(filledProfileData ? { ...filledProfileData } : { ...formData }),
     };
 
@@ -111,9 +112,16 @@ function Detail({ product, profile, uid }) {
             <div>
               <h2 className="max-w-xl mt-2 mb-1 text-2xl font-bold md:text-4xl">{product?.carName}</h2>
               <span className="text-lg font-bold text-red-500">{product?.carCategory}</span>
-              <p className="max-w-full mb-6 mt-6 text-gray-700 text-justify">{product?.add}</p>
+              <p className="max-w-full mb-6 mt-6 text-gray-700 text-justify">
+                {product?.carDescription} Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos voluptates velit optio doloremque quam.
+                Modi debitis esse laborum consectetur, tenetur similique libero sit cumque nobis atque iste alias corporis pariatur dolore maxime! Cum
+                fugit neque dolor error accusantium pariatur rerum, animi molestiae eum quo voluptatibus earum a tempora soluta consectetur dolorem
+                eius, illum quidem. Eaque reprehenderit accusantium qui, blanditiis repellendus ab, cupiditate inventore cum voluptates rem deleniti
+                ea corrupti nulla optio, rerum quod ex temporibus iste! Voluptas dolorum quo quaerat? Itaque praesentium nihil ad illum explicabo est
+                velit accusamus! Omnis, quam. Eligendi, non illum? Deleniti, totam vel? Libero, tempora vitae.
+              </p>
               <p className="inline-block text-4xl font-bold text-gray-700">
-                <span>{product?.description}</span>
+                <span>{product?.carPrice}</span>
               </p>
               <p className="text-green-600 mt-2 mb-1">In Stock</p>
             </div>
@@ -153,10 +161,10 @@ function Detail({ product, profile, uid }) {
               </label>
               <input
                 type="text"
-                id="category"
-                name="category"
+                id="carPrice"
+                name="carPrice"
                 className="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                value={product?.price}
+                value={product?.carPrice}
                 disabled
                 required
               />

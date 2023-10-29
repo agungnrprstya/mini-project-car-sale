@@ -9,8 +9,8 @@ function AddProduct() {
     carName: "",
     carCategory: "",
     carImage: "",
-    description: "",
-    price: "",
+    carDescription: "",
+    carPrice: "",
   };
 
   const navigate = useNavigate();

@@ -84,11 +84,11 @@ function Dashboard() {
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                   <span className="inline-block w-1/3 md:hidden font-bold">Description</span>
-                  {product.description}
+                  {product.carDescription}
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                   <span className="inline-block w-1/3 md:hidden font-bold">Price</span>
-                  {product.price}
+                  {product.carPrice}
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left md:table-cell">
                   <span className="inline-block w-1/3 md:hidden font-bold">Actions</span>
