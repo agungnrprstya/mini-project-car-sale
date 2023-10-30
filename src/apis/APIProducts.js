@@ -1,7 +1,7 @@
 import { collection, doc, getDocs, getDoc, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../configs/firebase";
-import { message } from "antd";
+import Swal from "sweetalert2";
 
 export const APIProducts = {
   getProducts: async () => {
@@ -13,8 +13,14 @@ export const APIProducts = {
       }));
       return products;
     } catch (error) {
-      message.error("login failed. your email or password is wrong!");
+      Swal.fire({
+        icon: "error",
+        title: "Failed to get product data!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       console.error(error);
+      throw new Error(error);
     }
   },
 
@@ -24,8 +30,14 @@ export const APIProducts = {
       const product = result.data();
       return product;
     } catch (error) {
-      message.error("failed to get invoice data!");
+      Swal.fire({
+        icon: "error",
+        title: "Failed to get product data!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       console.error(error);
+      throw new Error(error);
     }
   },
 

@@ -20,7 +20,7 @@ const CustomerCart = ({ invoice }) => {
                   <p className="text-md leading-none text-gray-800">{invoice?.carCategory}</p>
                 </div>
                 <div className="flex justify-end space-x-8 items-start w-full">
-                  <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">${invoice?.price}</p>
+                  <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">${invoice?.carPrice}</p>
                 </div>
               </div>
               <p className="text-justify pt-5">{invoice?.carDescription}</p>

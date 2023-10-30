@@ -1,6 +1,6 @@
-import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
+import { collection, getDocs, addDoc, doc, deleteDoc, query, where } from "firebase/firestore";
 import { db } from "../configs/firebase";
-import { message } from "antd";
+import Swal from "sweetalert2";
 
 export const APIProfiles = {
   getProfiles: async () => {
@@ -12,8 +12,14 @@ export const APIProfiles = {
       }));
       return profiles;
     } catch (error) {
-      message.error("login failed. your email or password is wrong!");
+      Swal.fire({
+        icon: "error",
+        title: "Failed to get profile data!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       console.error(error);
+      throw new Error(error);
     }
   },
 
@@ -29,8 +35,14 @@ export const APIProfiles = {
       console.log("Console log profiles: ", profiles);
       return profiles;
     } catch (error) {
-      message.error("Gagal mengambil data profile!");
+      Swal.fire({
+        icon: "error",
+        title: "Failed to get profile data!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       console.error(error);
+      throw new Error(error);
     }
   },
 
@@ -41,6 +53,18 @@ export const APIProfiles = {
       return docRef;
     } catch (e) {
       console.error("Error adding document: ", e);
+      throw new Error(e);
+    }
+  },
+
+  deleteProfile: async (id) => {
+    try {
+      console.log(id);
+      const profileRef = doc(db, "profiles", id);
+      await deleteDoc(profileRef);
+      return "Successfully deleted profiles!";
+    } catch (e) {
+      console.error("Error deleting document: ", e);
       throw new Error(e);
     }
   },

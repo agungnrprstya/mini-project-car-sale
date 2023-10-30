@@ -18,7 +18,7 @@ function ProductPage() {
   }, [dispatch]);
 
   //Pagination
-  const productsPerPage = 8;
+  const productsPerPage = 9;
   const startIndex = (currentPage - 1) * productsPerPage;
   const endIndex = startIndex + productsPerPage;
   const totalPages = Math.ceil(stateProducts.data?.length / productsPerPage);
