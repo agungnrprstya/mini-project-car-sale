@@ -57,7 +57,7 @@ export const APIProfiles = {
     }
   },
 
-  deleteInvoice: async (id) => {
+  deleteProfile: async (id) => {
     try {
       console.log(id);
       const profileRef = doc(db, "profiles", id);

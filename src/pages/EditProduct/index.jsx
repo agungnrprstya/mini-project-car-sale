@@ -5,12 +5,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Sidebar from "../../components/Sidebar";
 import Form from "../../components/Form";
+import Swal from "sweetalert2";
 
 function EditProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const product = useSelector(selectProduct);
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     carName: product.data?.carName,
     carCategory: product.data?.carCategory,
@@ -47,6 +49,7 @@ function EditProduct() {
   // Handle form submission
   const onSubmit = async () => {
     try {
+      setLoading(true);
       await APIProducts.editProduct(id, {
         carName: data?.carName,
         carCategory: data?.carCategory,
@@ -54,17 +57,28 @@ function EditProduct() {
         carDescription: data?.carDescription,
         carPrice: data?.carPrice,
       });
-      console.log("Data yang dikirim:", product?.data);
-      navigate("/dashboard");
+      Swal.fire({
+        icon: "success",
+        title: "Edit Product successful!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } catch (error) {
-      console.error("Error updating product: ", error);
+      Swal.fire({
+        icon: "error",
+        title: "Edit product failed!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
+    setLoading(false);
+    navigate("/dashboard");
   };
 
   return (
     <div className="flex flex-row">
       <Sidebar />
-      <Form data={data} product={product} handleInput={handleInput} onSubmit={onSubmit} />
+      <Form data={data} product={product} handleInput={handleInput} onSubmit={onSubmit} loading={loading} />
     </div>
   );
 }

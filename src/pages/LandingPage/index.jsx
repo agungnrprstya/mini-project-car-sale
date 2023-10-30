@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-// import { initialProduct } from "../../data/productData";
 import { Link } from "react-router-dom";
 import { shuffle } from "lodash";
 import Carousel from "../../components/Carousel";
@@ -25,7 +24,7 @@ function LandingPage() {
 
   // Slice the first 4 shuffled products
   const displayedProducts = { ...shuffledProducts };
-  displayedProducts.data = displayedProducts.data?.slice(0, 4);
+  displayedProducts.data = displayedProducts.data?.slice(0, 3);
 
   console.log(displayedProducts);
 

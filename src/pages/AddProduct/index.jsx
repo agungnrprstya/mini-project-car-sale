@@ -3,6 +3,7 @@ import Sidebar from "../../components/Sidebar";
 import { APIProducts } from "../../apis/APIProducts";
 import { useNavigate } from "react-router-dom";
 import Form from "../../components/Form";
+import Swal from "sweetalert2";
 
 function AddProduct() {
   const initialValue = {
@@ -14,7 +15,7 @@ function AddProduct() {
   };
 
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState(initialValue);
 
   const handleInput = (e) => {
@@ -32,19 +33,30 @@ function AddProduct() {
       ...data,
     };
     try {
+      setLoading(true);
       await APIProducts.addProduct(formData);
-      console.log("Data yang dikirim:", formData);
-      navigate("/dashboard");
+      Swal.fire({
+        icon: "success",
+        title: "Add product successful!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } catch (error) {
-      console.error("Error adding product: ", error);
+      Swal.fire({
+        icon: "error",
+        title: "Add product failed!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
+    setLoading(false);
     navigate("/dashboard");
   };
 
   return (
     <div className="flex flex-row">
       <Sidebar />
-      <Form data={data} handleInput={handleInput} onSubmit={onSubmit} />
+      <Form data={data} handleInput={handleInput} onSubmit={onSubmit} loading={loading} />
     </div>
   );
 }
