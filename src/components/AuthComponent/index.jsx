@@ -3,9 +3,9 @@ import * as yup from "yup";
 import { Link } from "react-router-dom";
 import { APIAuth } from "../../apis/APIAuth";
 import { useNavigate } from "react-router-dom";
-import { message } from "antd";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Swal from "sweetalert2";
 
 function AuthComponent({ isLoginPage }) {
   const navigate = useNavigate();
@@ -32,25 +32,50 @@ function AuthComponent({ isLoginPage }) {
     try {
       if (isLoginPage) {
         await APIAuth.signInWithCredentials({ email, password });
-        message.success("Login successful");
+        Swal.fire({
+          icon: "success",
+          title: "Login successful",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         navigate("/");
       } else {
         await APIAuth.createAccount({ email, password });
-        message.success("Sign up successful");
+        Swal.fire({
+          icon: "success",
+          title: "Sign up successful",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         navigate("/login");
       }
     } catch (error) {
-      message.error(isLoginPage ? "Login failed. Your email or password is incorrect!" : "Email is already in use.");
+      Swal.fire({
+        icon: "error",
+        title: isLoginPage ? "Login failed. Your email or password is incorrect!" : "Email is already in use.",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   };
 
   const signInWithGoogle = async () => {
     try {
       await APIAuth.signInWithGoogleOAuth();
-      message.success("Login successful");
+      Swal.fire({
+        icon: "success",
+        title: "Login successful",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       navigate("/");
     } catch (error) {
-      message.error("Login failed. Google OAuth is failed");
+      Swal.fire({
+        icon: "error",
+        title: "Login failed. Google OAuth is failed",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   };
 
