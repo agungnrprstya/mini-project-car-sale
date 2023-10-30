@@ -14,6 +14,7 @@ import NotFound from "../pages/NotFound";
 import ProductPage from "../pages/ProductPage";
 import SignUpPage from "../pages/SignUpPage";
 import MyOrder from "../pages/MyOrder";
+import ListUsers from "../pages/ListUser";
 
 function RouteManagement() {
   return (
@@ -30,6 +31,7 @@ function RouteManagement() {
         <Route path="/add-product" element={<AddProduct />} />
         <Route path="/edit-product/:id" element={<EditProduct />} />
         <Route path="/list-transaction" element={<ListTransaction />} />
+        <Route path="/list-user" element={<ListUsers />} />
       </Route>
       <Route path="/" element={<AuthorizedRoute />}>
         <Route path="/product/:id" element={<DetailProduct />} />
