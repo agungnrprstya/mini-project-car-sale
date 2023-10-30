@@ -1,4 +1,5 @@
 import React from "react";
+import { avatar } from "../../assets/image/image";
 
 const CustomerInfo = ({ profile, invoiceLength }) => {
   return (
@@ -11,7 +12,7 @@ const CustomerInfo = ({ profile, invoiceLength }) => {
         >
           <div className="flex flex-col justify-start items-start flex-shrink-0">
             <div className="flex justify-center  w-full  md:justify-start items-center space-x-4 py-8 border-b border-gray-200">
-              <img src="https://i.ibb.co/5TSg7f6/Rectangle-18.png" alt="avatar" />
+              <img src={avatar} alt="avatar" className="w-12" />
               <div className=" flex justify-start items-start flex-col space-y-2">
                 <p className="text-base font-semibold leading-4 text-left text-gray-800">{profile?.name}</p>
                 <p className="text-sm leading-5 text-gray-600">{invoiceLength} Orders</p>

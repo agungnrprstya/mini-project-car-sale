@@ -11,3 +11,7 @@ import interior2 from "./interior-2.jpg";
 import interior3 from "./interior-3.jpg";
 
 export const interiorImages = [interior1, interior2, interior3];
+
+import avatarImage from "./avatar.png";
+
+export const avatar = avatarImage;
