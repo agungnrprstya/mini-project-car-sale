@@ -9,6 +9,7 @@ import invoice from "./invoiceSlice";
 import profiles from "./profilesSlice";
 import profile from "./profileSlice";
 import auth from "./authSlice";
+import admins from "./adminsSlice";
 
 const reducers = combineReducers({
   products,
@@ -18,6 +19,7 @@ const reducers = combineReducers({
   profiles,
   profile,
   auth,
+  admins,
 });
 
 const persistConfig = {

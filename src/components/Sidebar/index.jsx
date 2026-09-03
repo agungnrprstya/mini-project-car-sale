@@ -57,6 +57,17 @@ function Sidebar() {
           </li>
           <li>
             <Link
+              to="/list-admin"
+              className="cursor-pointer flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-white"
+            >
+              <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-white">
+                <i className="bx bxs-user-check"></i>
+              </span>
+              <span className="text-sm font-medium">List Admin</span>
+            </Link>
+          </li>
+          <li>
+            <Link
               to="/"
               className="cursor-pointer flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-white"
             >

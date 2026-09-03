@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { setAuthUser } from "./store/authSlice";
 import { auth } from "./configs/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { fetchGetAdmins } from "./store/adminsSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -13,6 +14,11 @@ function App() {
       dispatch(setAuthUser(user));
     });
     return unsubscribe;
+  }, [dispatch]);
+
+  // Load admin list at boot so Navbar/AdminRoute know who is admin
+  useEffect(() => {
+    dispatch(fetchGetAdmins());
   }, [dispatch]);
 
   return <RouteManagement />;

@@ -15,6 +15,7 @@ import ProductPage from "../pages/ProductPage";
 import SignUpPage from "../pages/SignUpPage";
 import MyOrder from "../pages/MyOrder";
 import ListUsers from "../pages/ListUser";
+import ListAdmin from "../pages/ListAdmin";
 
 function RouteManagement() {
   return (
@@ -32,6 +33,7 @@ function RouteManagement() {
         <Route path="/edit-product/:id" element={<EditProduct />} />
         <Route path="/list-transaction" element={<ListTransaction />} />
         <Route path="/list-user" element={<ListUsers />} />
+        <Route path="/list-admin" element={<ListAdmin />} />
       </Route>
       <Route path="/" element={<AuthorizedRoute />}>
         <Route path="/product/:id" element={<DetailProduct />} />

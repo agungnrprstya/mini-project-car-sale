@@ -3,11 +3,19 @@ rules_version = '2';
 // ============================================================================
 // Firestore Security Rules — Car Sale Mini Project
 //
-// 🚨 IMPORTANT: Before deploying to production, update the ADMIN_UIDs below
-// with the actual Firebase Auth UIDs matching REACT_APP_ADMIN_ID_1 and
-// REACT_APP_ADMIN_ID_2 in your .env.
+// Admin membership is driven by the `admins` collection: a user is an admin
+// iff a document named by their auth UID exists at admins/<uid>. Add or
+// remove admins from the Firebase Console (or the List Admin page in the
+// app) — no rule edits needed.
 //
-// These placeholder values will BLOCK all admin write operations.
+// IMPORTANT — one-time migration: BEFORE publishing these rules, create the
+// `admins` collection and add a document for each current admin UID
+// (Firebase Console -> Firestore Database -> admins -> Add document, id =
+// the UID). Otherwise every admin locks themselves out the moment these
+// rules go live.
+//
+// Apply these rules in the Firebase Console:
+//   Firebase Console -> Firestore Database -> Rules -> paste -> Publish
 // ============================================================================
 
 service cloud.firestore {
@@ -19,7 +27,12 @@ service cloud.firestore {
 
     function isAdmin() {
       return isSignedIn()
-        && request.auth.uid in ['REPLACE_WITH_ACTUAL_ADMIN_UID_1', 'REPLACE_WITH_ACTUAL_ADMIN_UID_2'];
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // admins: who is allowed to manage the shop — admin manages admins
+    match /admins/{uid} {
+      allow get, list, create, update, delete: if isAdmin();
     }
 
     // products: public catalog — anyone can read, only admin can write
