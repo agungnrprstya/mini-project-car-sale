@@ -74,6 +74,7 @@ function DetailProduct() {
         showConfirmButton: false,
         timer: 1500,
       });
+      Navigate("/my-order");
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -83,7 +84,6 @@ function DetailProduct() {
       });
     }
     setLoading(false);
-    Navigate("/my-order");
   };
 
   return (

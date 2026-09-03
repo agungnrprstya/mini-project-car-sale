@@ -26,8 +26,6 @@ function LandingPage() {
   const displayedProducts = { ...shuffledProducts };
   displayedProducts.data = displayedProducts.data?.slice(0, 3);
 
-  console.log(displayedProducts);
-
   return (
     <div className="flex flex-col min-h-screen justify-between">
       <Navbar />
