@@ -1,4 +1,5 @@
 import React from "react";
+import ProductImage from "../ProductImage";
 
 const CustomerCart = ({ invoice }) => {
   return (
@@ -11,7 +12,7 @@ const CustomerCart = ({ invoice }) => {
             key={`${invoice.id}_${index}`}
           >
             <div className="w-full md:w-[20rem] h-40 mx-auto my-auto">
-              <img className="w-full md:block h-full" src={invoice?.carImage} alt={invoice?.carName} />
+              <ProductImage className="w-full md:block h-full" src={invoice?.carImage} alt={invoice?.carName} />
             </div>
             <div className="h-full w-full flex flex-col">
               <div className="md:flex-row flex-col flex justify-between items-start w-full space-y-4 md:space-y-0">

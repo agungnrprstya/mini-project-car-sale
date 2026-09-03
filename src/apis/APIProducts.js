@@ -1,7 +1,7 @@
 import { collection, doc, getDocs, getDoc, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { db, storage } from "../configs/firebase";
+import { db } from "../configs/firebase";
 import Swal from "sweetalert2";
+import { uploadImageToCloudinary } from "../utils/cloudinary";
 
 export const APIProducts = {
   getProducts: async () => {
@@ -43,23 +43,11 @@ export const APIProducts = {
 
   addProduct: async (product) => {
     try {
-      // Get the file name from the product.carImage property
-      const fileName = product.carImage.name;
-
-      // Upload the image to Firebase Storage
-      const imageRef = ref(storage, `carImage/${fileName}`);
-      const uploadTask = uploadBytes(imageRef, product.carImage);
-
-      await uploadTask;
-
-      const downloadURL = await getDownloadURL(imageRef);
-
-      // Update the product object with the download URL
-      product.carImage = downloadURL;
+      // Upload the image to Cloudinary and store the resulting URL
+      product.carImage = await uploadImageToCloudinary(product.carImage);
 
       // Add the product data to Firestore
       const docRef = await addDoc(collection(db, "products"), product);
-      console.log("Document written with ID: ", docRef.id);
       return docRef;
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -83,24 +71,14 @@ export const APIProducts = {
     try {
       const productRef = doc(db, "products", id);
 
-      // Get the file name from the new image
-      const fileName = product.carImage.name;
+      // Only upload when the admin picked a new file. If carImage is still
+      // the existing URL string, keep it untouched so editing other fields
+      // does not blank out or re-upload the image.
+      if (product.carImage instanceof File || product.carImage instanceof Blob) {
+        product.carImage = await uploadImageToCloudinary(product.carImage);
+      }
 
-      // Upload the new image to Firebase Storage
-      const imageRef = ref(storage, `carImage/${fileName}`);
-      const uploadTask = uploadBytes(imageRef, product.carImage);
-
-      await uploadTask;
-
-      const downloadURL = await getDownloadURL(imageRef);
-
-      // Update the product object with the new download URL
-      product.carImage = downloadURL;
-
-      // Remove the carImage property from the product to prevent overwriting the image
-      const { ...updatedProduct } = product;
-
-      await updateDoc(productRef, updatedProduct);
+      await updateDoc(productRef, product);
 
       return "Successfully updated product!";
     } catch (e) {

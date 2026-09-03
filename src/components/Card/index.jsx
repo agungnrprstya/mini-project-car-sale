@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import ProductImage from "../ProductImage";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ function ProductCard({ product }) {
                 key={`${product.id}_${index}`}
               >
                 <div className="relative overflow-hidden group-hover:opacity-75 rounded-lg  ">
-                  <img className="object-contain bg-gray-500 h-full w-full lg:h-48 lg:w-full object-center" src={product.carImage} alt="Product" />
+                  <ProductImage className="object-contain bg-gray-500 h-full w-full lg:h-48 lg:w-full object-center" src={product.carImage} alt="Product" />
                   <div className="absolute inset-0 bg-black opacity-10"></div>
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mt-4">{product.carName}</h3>
