@@ -1,4 +1,4 @@
-import { collection, getDocs, addDoc, doc, deleteDoc, query, where } from "firebase/firestore";
+import { collection, getDocs, addDoc, doc, deleteDoc, query, where, serverTimestamp } from "firebase/firestore";
 import { db } from "../configs/firebase";
 import Swal from "sweetalert2";
 
@@ -48,7 +48,7 @@ export const APIInvoices = {
 
   addInvoice: async (invoice) => {
     try {
-      const docRef = await addDoc(collection(db, "invoices"), invoice);
+      const docRef = await addDoc(collection(db, "invoices"), { ...invoice, createdAt: serverTimestamp() });
       console.log("Document written with ID: ", docRef.id);
       return docRef;
     } catch (e) {
