@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchInvoiceByUid, selectInvoice } from "../../store/invoiceSlice";
 import { fetchGetProfileByUid, selectProfile } from "../../store/profileSlice";
+import { fetchGetProducts, selectProducts } from "../../store/productsSlice";
 import Pagination from "../../components/Pagination";
 import Cookies from "js-cookie";
 import Footer from "../../components/Footer";
@@ -14,12 +15,14 @@ function MyOrder() {
   const dispatch = useDispatch();
   const invoice = useSelector(selectInvoice);
   const profile = useSelector(selectProfile);
+  const products = useSelector(selectProducts);
   const invoiceLength = invoice.data?.length;
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     dispatch(fetchInvoiceByUid(uid));
     dispatch(fetchGetProfileByUid(uid));
+    dispatch(fetchGetProducts());
   }, [dispatch, uid]);
 
   //Pagination
@@ -61,7 +64,7 @@ function MyOrder() {
         <div className="bg-white max-w-screen-xl mx-auto w-full px-10 py-10 rounded-3xl my-[2rem]">
           <div className="flex flex-col xl:flex-row jusitfy-center items-stretch xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">
             <CustomerInfo profile={profile} invoiceLength={invoiceLength} />
-            <CustomerCart invoice={productsToDisplay} />
+            <CustomerCart invoice={productsToDisplay} products={products?.data} />
           </div>
         </div>
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />

@@ -31,7 +31,10 @@ export const APIInvoices = {
       const querySnapshot = await getDocs(q);
       const invoices = [];
       querySnapshot.forEach((doc) => {
-        invoices.push(doc.data());
+        invoices.push({
+          ...doc.data(),
+          id: doc.id,
+        });
       });
       return invoices;
     } catch (error) {
