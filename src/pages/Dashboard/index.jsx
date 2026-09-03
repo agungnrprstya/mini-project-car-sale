@@ -60,7 +60,7 @@ function Dashboard() {
       )}
       <div className="flex flex-row">
         <Sidebar />
-        <div className="px-[2rem] min-h-screen flex-1 min-w-0 overflow-x-auto">
+        <div className="px-[2rem] min-h-screen w-screen">
           <div className="mt-[2rem] pb-4">
             <Link to="/add-product">
               <button
