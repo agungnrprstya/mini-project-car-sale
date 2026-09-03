@@ -32,7 +32,6 @@ export const APIProfiles = {
       querySnapshot.forEach((doc) => {
         profiles.push(doc.data());
       });
-      console.log("Console log profiles: ", profiles);
       return profiles;
     } catch (error) {
       Swal.fire({
@@ -49,7 +48,6 @@ export const APIProfiles = {
   addProfile: async (profile) => {
     try {
       const docRef = await addDoc(collection(db, "profiles"), profile);
-      console.log("Document written with ID: ", docRef.id);
       return docRef;
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -59,7 +57,6 @@ export const APIProfiles = {
 
   deleteProfile: async (id) => {
     try {
-      console.log(id);
       const profileRef = doc(db, "profiles", id);
       await deleteDoc(profileRef);
       return "Successfully deleted profiles!";

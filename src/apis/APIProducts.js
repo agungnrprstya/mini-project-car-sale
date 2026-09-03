@@ -27,6 +27,9 @@ export const APIProducts = {
   getProductById: async (id) => {
     try {
       const result = await getDoc(doc(db, "products", id));
+      if (!result.exists()) {
+        throw new Error("Product not found");
+      }
       const product = result.data();
       return product;
     } catch (error) {
@@ -57,7 +60,6 @@ export const APIProducts = {
 
   deleteProduct: async (id) => {
     try {
-      console.log(id);
       const productRef = doc(db, "products", id);
       await deleteDoc(productRef);
       return "Successfully deleted product!";

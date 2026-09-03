@@ -8,7 +8,6 @@ export const APIAuth = {
       const result = await signInWithEmailAndPassword(auth, email, password);
       const { idToken, localId } = result._tokenResponse;
       authentication.storeCredentialsToCookie({ idToken, localId });
-      console.log(result);
     } catch (err) {
       console.error(err);
       throw new Error(err);
@@ -19,7 +18,6 @@ export const APIAuth = {
       const result = await signInWithPopup(auth, googleProvider);
       const { oauthAccessToken, localId } = result._tokenResponse;
       authentication.storeCredentialsToCookie({ oauthAccessToken, localId });
-      console.log(result);
     } catch (err) {
       console.error(err);
       throw new Error(err);

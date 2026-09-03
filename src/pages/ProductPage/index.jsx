@@ -48,8 +48,6 @@ function ProductPage() {
     data: filteredProducts.data?.slice(startIndex, endIndex),
   };
 
-  console.log(productsToDisplay);
-
   return (
     <div className="flex flex-col min-h-screen justify-between">
       <Navbar />

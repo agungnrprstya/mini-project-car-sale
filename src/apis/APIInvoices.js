@@ -10,7 +10,6 @@ export const APIInvoices = {
         ...doc.data(),
         id: doc.id,
       }));
-      console.log(invoices);
       return invoices;
     } catch (error) {
       Swal.fire({
@@ -48,8 +47,7 @@ export const APIInvoices = {
 
   addInvoice: async (invoice) => {
     try {
-      const docRef = await addDoc(collection(db, "invoices"), { ...invoice, createdAt: serverTimestamp() });
-      console.log("Document written with ID: ", docRef.id);
+const docRef = await addDoc(collection(db, "invoices"), { ...invoice, createdAt: serverTimestamp() });
       return docRef;
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -59,7 +57,6 @@ export const APIInvoices = {
 
   deleteInvoice: async (id) => {
     try {
-      console.log(id);
       const invoiceRef = doc(db, "invoices", id);
       await deleteDoc(invoiceRef);
       return "Successfully deleted invoices!";
