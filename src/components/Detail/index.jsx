@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { interiorImages } from "../../assets/image/image";
 import Modal from "../Modal";
+import ProductImage from "../ProductImage";
+import { isBrokenFirebaseStorageUrl, PLACEHOLDER_IMAGE } from "../../utils/cloudinary";
 
 function Detail({ product, profile, onSubmit, loading, handleInput, formData }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -40,7 +42,7 @@ function Detail({ product, profile, onSubmit, loading, handleInput, formData }) 
   } = useForm({ resolver: yupResolver(validationSchema) });
 
   const openModal = (imageUrl) => {
-    setSelectedImage(imageUrl);
+    setSelectedImage(isBrokenFirebaseStorageUrl(imageUrl) || !imageUrl ? PLACEHOLDER_IMAGE : imageUrl);
     setModalOpen(true);
   };
 
@@ -81,7 +83,7 @@ function Detail({ product, profile, onSubmit, loading, handleInput, formData }) 
                 {modalOpen && <Modal selectedImage={selectedImage} closeModal={closeModal} />}
                 <div className="overflow-hidden">
                   <div className="relative border hover:border-blue-300 mb-6 lg:mb-10 lg:h-2/4 cursor-pointer">
-                    <img src={product?.carImage} alt="" className="object-contain h-[20rem] w-full " onClick={() => openModal(product.carImage)} />
+                    <ProductImage src={product?.carImage} alt="" className="object-contain h-[20rem] w-full" onClick={() => openModal(product.carImage)} />
                   </div>
                   <div className="flex-wrap hidden md:flex justify-between">
                     <div className="w-1/2 sm:w-[11rem] cursor-pointer">

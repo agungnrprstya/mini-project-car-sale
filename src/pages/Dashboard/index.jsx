@@ -5,6 +5,7 @@ import Pagination from "../../components/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchGetProducts, selectProducts } from "../../store/productsSlice";
 import { APIProducts } from "../../apis/APIProducts";
+import ProductImage from "../../components/ProductImage";
 import Swal from "sweetalert2";
 
 function Dashboard() {
@@ -97,7 +98,7 @@ function Dashboard() {
                   </td>
                   <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell w-[10rem]">
                     <span className="inline-block w-1/3 md:hidden font-bold">Image</span>
-                    <img src={product.carImage} alt={product.alt} className="w-[10rem] h-20 object-contain" />
+                    <ProductImage src={product.carImage} alt={product.carName} className="w-[10rem] h-20 object-contain" />
                   </td>
                   <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                     <span className="inline-block w-1/3 md:hidden font-bold">Description</span>

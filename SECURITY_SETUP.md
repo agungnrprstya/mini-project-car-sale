@@ -14,12 +14,25 @@ Firestore/Storage rules below are the real enforcement.
    and `REACT_APP_ADMIN_ID_2` in your `.env`).
 5. Paste the rules into the console and click **Publish**.
 
-## 2. Apply Storage Rules
+## 2. Set up Cloudinary (product images)
 
-1. Go to **Storage → Rules**.
-2. Do the same `ADMIN_UID_1` / `ADMIN_UID_2` replacement using
-   `storage.rules` from this repo.
-3. Paste and **Publish**.
+Firebase Storage is not available on the free (Spark) plan, so product
+images are hosted on Cloudinary instead.
+
+1. Create a free account at [cloudinary.com](https://cloudinary.com/).
+2. Dashboard → **Settings → Upload → Upload presets → Add upload preset**.
+3. Set **Signing Mode** to `Unsigned`, then save.
+4. Copy the **preset name** and your **Cloud Name** (shown at the top of
+   the Dashboard) into `.env`:
+
+   ```
+   REACT_APP_CLOUDINARY_CLOUD_NAME=your-cloud-name
+   REACT_APP_CLOUDINARY_UPLOAD_PRESET=your-preset-name
+   ```
+
+5. Restart the dev server — CRA only reads `.env` at startup.
+
+See `.env.example` for the full list of required variables.
 
 ## What the rules enforce
 
@@ -30,8 +43,13 @@ Firestore/Storage rules below are the real enforcement.
 | `invoices` | Own invoices or admin | Create own; delete admin only |
 | Anything else | Denied | Denied |
 
-Storage: `carImage/*` is publicly readable (catalog images), uploads are
-admin only.
+## About images
+
+Product images are uploaded to Cloudinary, not Firebase Storage (Spark
+plan no longer includes Storage). Legacy products whose `carImage` still
+points at `appspot.com` are dead — `ProductImage` detects those URLs and
+renders a placeholder instead. To fix a product, edit it in the dashboard
+and upload a new image.
 
 ## Finding your admin UID
 
