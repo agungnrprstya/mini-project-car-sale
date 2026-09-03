@@ -51,7 +51,7 @@ function ListTransaction() {
       )}
       <div className="flex flex-row">
         <Sidebar />
-        <div className="px-[2rem] pt-[2rem] min-h-screen w-screen flex flex-col justify-between">
+        <div className="px-[2rem] pt-[2rem] min-h-screen w-full flex flex-col justify-between">
           <table className="h-auto w-full border-collapse md:table">
             <thead className="block md:table-header-group">
               <tr className="border border-grey-500 md:border-none block md:table-row absolute -top-full md:top-auto -left-full md:left-auto md:relative">
