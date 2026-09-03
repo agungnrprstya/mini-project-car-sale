@@ -92,7 +92,7 @@ function ListTransaction() {
                     {transaction.address}
                   </td>
                   <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                    <span className="inline-block w-1/3 md:hidden font-bold">Address</span>
+                    <span className="inline-block w-1/3 md:hidden font-bold">Action</span>
                     <a
                       className="font-medium text-red-600 hover:underline mr-3 cursor-pointer"
                       onClick={() => {
@@ -104,15 +104,24 @@ function ListTransaction() {
                           confirmButtonColor: "#3085d6",
                           cancelButtonColor: "#d33",
                           confirmButtonText: "Yes, delete it!",
-                        }).then((result) => {
+                        }).then(async (result) => {
                           if (result.isConfirmed) {
-                            APIInvoices.deleteInvoice(transaction.id);
-                            Swal.fire({
-                              icon: "success",
-                              title: "Invoice Deleted Successfully",
-                              showConfirmButton: false,
-                              timer: 1500,
-                            }).then(() => navigate(0));
+                            try {
+                              await APIInvoices.deleteInvoice(transaction.id);
+                              Swal.fire({
+                                icon: "success",
+                                title: "Invoice Deleted Successfully",
+                                showConfirmButton: false,
+                                timer: 1500,
+                              }).then(() => navigate(0));
+                            } catch (error) {
+                              Swal.fire({
+                                icon: "error",
+                                title: "Failed to delete invoice!",
+                                showConfirmButton: false,
+                                timer: 1500,
+                              });
+                            }
                           }
                         });
                       }}

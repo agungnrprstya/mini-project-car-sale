@@ -114,7 +114,6 @@ function Dashboard() {
                     </a>
                     <a
                       className="font-medium text-red-600 hover:underline cursor-pointer"
-                      // onClick={() => APIProducts.deleteProduct(product.id).then(() => navigate(0))}
                       onClick={() => {
                         Swal.fire({
                           title: "Are you sure?",
@@ -124,15 +123,24 @@ function Dashboard() {
                           confirmButtonColor: "#3085d6",
                           cancelButtonColor: "#d33",
                           confirmButtonText: "Yes, delete it!",
-                        }).then((result) => {
+                        }).then(async (result) => {
                           if (result.isConfirmed) {
-                            APIProducts.deleteProduct(product.id);
-                            Swal.fire({
-                              icon: "success",
-                              title: "Product Deleted Successfully",
-                              showConfirmButton: false,
-                              timer: 1500,
-                            }).then(() => navigate(0));
+                            try {
+                              await APIProducts.deleteProduct(product.id);
+                              Swal.fire({
+                                icon: "success",
+                                title: "Product Deleted Successfully",
+                                showConfirmButton: false,
+                                timer: 1500,
+                              }).then(() => navigate(0));
+                            } catch (error) {
+                              Swal.fire({
+                                icon: "error",
+                                title: "Failed to delete product!",
+                                showConfirmButton: false,
+                                timer: 1500,
+                              });
+                            }
                           }
                         });
                       }}

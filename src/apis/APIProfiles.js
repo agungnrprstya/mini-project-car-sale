@@ -19,7 +19,7 @@ export const APIProfiles = {
         timer: 1500,
       });
       console.error(error);
-      throw new Error(error);
+      throw error;
     }
   },
 
@@ -42,7 +42,7 @@ export const APIProfiles = {
         timer: 1500,
       });
       console.error(error);
-      throw new Error(error);
+      throw error;
     }
   },
 
@@ -53,7 +53,7 @@ export const APIProfiles = {
       return docRef;
     } catch (e) {
       console.error("Error adding document: ", e);
-      throw new Error(e);
+      throw e;
     }
   },
 
@@ -65,7 +65,7 @@ export const APIProfiles = {
       return "Successfully deleted profiles!";
     } catch (e) {
       console.error("Error deleting document: ", e);
-      throw new Error(e);
+      throw e;
     }
   },
 };
