@@ -39,10 +39,10 @@ function EditProduct() {
     const { name, type } = e.target;
     if (type === "file") {
       const file = e.target.files[0];
-      setData({ ...data, carImage: file });
+      setData((prev) => ({ ...prev, carImage: file }));
     } else {
       const value = e.target.value;
-      setData({ ...data, [name]: value });
+      setData((prev) => ({ ...prev, [name]: value }));
     }
   };
 

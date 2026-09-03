@@ -41,7 +41,7 @@ function DetailProduct() {
 
   const handleInput = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const onSubmit = async () => {
