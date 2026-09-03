@@ -49,12 +49,16 @@ function DetailProduct() {
 
     const invoiceData = {
       uid: uid,
+      // productId lets the order history re-resolve the image later, in case
+      // the snapshot carImage URL dies (e.g. the Firebase Storage migration).
+      productId: id,
       carName: product.data?.carName,
-      carImage: product.data?.carImage,
       carCategory: product.data?.carCategory,
       carDescription: product.data?.carDescription,
       carPrice: product.data?.carPrice,
       ...(filledProfileData ? { ...filledProfileData } : { ...formData }),
+      // carImage last: never let a profile/form field overwrite the snapshot
+      carImage: product.data?.carImage,
     };
 
     const profileData = {
