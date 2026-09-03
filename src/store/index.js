@@ -8,6 +8,7 @@ import invoices from "./invoicesSlice";
 import invoice from "./invoiceSlice";
 import profiles from "./profilesSlice";
 import profile from "./profileSlice";
+import admins from "./adminsSlice";
 
 const reducers = combineReducers({
   products,
@@ -16,6 +17,7 @@ const reducers = combineReducers({
   invoice,
   profiles,
   profile,
+  admins,
 });
 
 const persistConfig = {

@@ -8,13 +8,30 @@ Firestore/Storage rules below are the real enforcement.
 
 1. Open the [Firebase Console](https://console.firebase.google.com/) and select this project.
 2. Go to **Firestore Database → Rules**.
-3. Open `firestore.rules` in this repo.
-4. Replace `ADMIN_UID_1` and `ADMIN_UID_2` with the actual Firebase Auth
-   UIDs of your admin accounts (the same values as `REACT_APP_ADMIN_ID_1`
-   and `REACT_APP_ADMIN_ID_2` in your `.env`).
-5. Paste the rules into the console and click **Publish**.
+3. Open `firestore.rules` in this repo, paste the contents into the
+   console, and click **Publish**. No edits needed — admin membership is
+   data, not rules.
+4. **First-time only (migration):** before publishing these rules, seed
+   the `admins` collection with your current admin UIDs:
+   Firestore Database → **+ Start collection** → `admins` → **Add
+   document** → set the document ID to the admin's **User UID** (Firebase
+   Console → Authentication → Users → copy **User UID**) and add a field
+   `uid` with the same value. Do this for every existing admin, or they
+   lose access the moment the new rules go live.
 
-## 2. Set up Cloudinary (product images)
+## 2. Add / remove admins (no code, no rule edits)
+
+Admins are stored in the `admins` collection (document ID = auth UID):
+
+- **App:** sign in as an admin, open **List Admin** in the dashboard
+  sidebar, paste a UID, click **Add Admin**. Delete via the row action.
+- **Console:** Firestore Database → `admins` → Add document / delete
+  document.
+
+The rules check `exists(.../admins/<uid>)` on every request, so changes
+take effect immediately. No redeploy, no `.env` edits.
+
+## 3. Set up Cloudinary (product images)
 
 Firebase Storage is not available on the free (Spark) plan, so product
 images are hosted on Cloudinary instead.
@@ -38,6 +55,7 @@ See `.env.example` for the full list of required variables.
 
 | Collection | Read | Write |
 |---|---|---|
+| `admins` | Admin only | Admin only |
 | `products` | Public | Admin only |
 | `profiles` (PII: name, email, phone, address) | Own profile or admin | Create own; update/delete admin only |
 | `invoices` | Own invoices or admin | Create own; delete admin only |
@@ -57,11 +75,11 @@ Firebase Console → Authentication → Users → click a user → copy **User U
 
 ## Note on the client-side admin check
 
-`src/utils/authentication.js` checks `auth.currentUser.uid` against the
-admin UID list (with a cookie fallback while Firebase restores the session
-on page load). This gates the admin UI only. Even if someone forges the
-cookie to reveal admin pages, every Firestore/Storage request is still
-rejected by the rules above unless they are signed in as the real admin.
+`src/hooks/useIsAdmin.js` reads the `admins` list from the Redux store
+and compares `auth.currentUser.uid` against it. This gates the admin UI
+only. Even if someone forges the cookie to reveal admin pages, every
+Firestore/Storage request is still rejected by the rules above unless
+they are signed in as a real admin.
 
 ## Rotating the exposed Firebase web config (recommended)
 
@@ -75,4 +93,4 @@ by design, but as good hygiene:
 For a stronger long-term setup, switch admin detection to Firebase
 [custom claims](https://firebase.google.com/docs/auth/admin/custom-claims)
 set via the Admin SDK, and read them in the rules with
-`request.auth.token.admin == true` instead of a hardcoded UID list.
+`request.auth.token.admin == true` instead of the `admins` collection.
