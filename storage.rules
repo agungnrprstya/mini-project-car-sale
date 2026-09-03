@@ -1,0 +1,37 @@
+rules_version = '2';
+
+// ============================================================================
+// Firebase Storage Security Rules — Car Sale Mini Project
+//
+// IMPORTANT: Replace ADMIN_UID_1 and ADMIN_UID_2 below with the actual
+// Firebase Auth UIDs of the admin accounts.
+//
+// Apply in the Firebase Console:
+//   Firebase Console -> Storage -> Rules -> paste -> Publish
+// ============================================================================
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && request.auth.uid in ['ADMIN_UID_1', 'ADMIN_UID_2'];
+    }
+
+    // Car images for the catalog — public read (shown on landing/product
+    // pages), only admin can upload or overwrite.
+    match /carImage/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Deny everything else by default
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

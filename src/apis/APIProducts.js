@@ -20,7 +20,7 @@ export const APIProducts = {
         timer: 1500,
       });
       console.error(error);
-      throw new Error(error);
+      throw error;
     }
   },
 
@@ -37,7 +37,7 @@ export const APIProducts = {
         timer: 1500,
       });
       console.error(error);
-      throw new Error(error);
+      throw error;
     }
   },
 
@@ -63,7 +63,7 @@ export const APIProducts = {
       return docRef;
     } catch (e) {
       console.error("Error adding document: ", e);
-      throw new Error(e);
+      throw e;
     }
   },
 
@@ -75,7 +75,7 @@ export const APIProducts = {
       return "Successfully deleted product!";
     } catch (e) {
       console.error("Error deleting document: ", e);
-      throw new Error(e);
+      throw e;
     }
   },
 
@@ -105,7 +105,7 @@ export const APIProducts = {
       return "Successfully updated product!";
     } catch (e) {
       console.error("Error updating document: ", e);
-      throw new Error(e);
+      throw e;
     }
   },
 };

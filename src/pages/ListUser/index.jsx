@@ -94,15 +94,24 @@ function ListUsers() {
                           confirmButtonColor: "#3085d6",
                           cancelButtonColor: "#d33",
                           confirmButtonText: "Yes, delete it!",
-                        }).then((result) => {
+                        }).then(async (result) => {
                           if (result.isConfirmed) {
-                            APIProfiles.deleteProfile(profiles.id);
-                            Swal.fire({
-                              icon: "success",
-                              title: "User Deleted Successfully",
-                              showConfirmButton: false,
-                              timer: 1500,
-                            }).then(() => navigate(0));
+                            try {
+                              await APIProfiles.deleteProfile(profiles.id);
+                              Swal.fire({
+                                icon: "success",
+                                title: "User Deleted Successfully",
+                                showConfirmButton: false,
+                                timer: 1500,
+                              }).then(() => navigate(0));
+                            } catch (error) {
+                              Swal.fire({
+                                icon: "error",
+                                title: "Failed to delete user!",
+                                showConfirmButton: false,
+                                timer: 1500,
+                              });
+                            }
                           }
                         });
                       }}

@@ -23,7 +23,8 @@ const invoicesSlice = createSlice({
     });
     builder.addCase("fetch/getInvoices/rejected", (state, { error }) => {
       state.status = "failed";
-      state.data = error.stack;
+      state.data = [];
+      state.message = error?.message || "Failed to get invoices";
     });
   },
 });
