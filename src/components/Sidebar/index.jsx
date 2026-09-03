@@ -9,7 +9,6 @@ const logout = async () => {
 function Sidebar() {
   return (
     <>
-      <link rel="stylesheet" href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" />
       <div className="flex flex-col h-screen w-[20rem] bg-gray-600 overflow-hidden">
         <div className="flex items-center justify-center h-20 shadow-md">
           <h1 className="text-3xl uppercase text-white">Bandar Mobil</h1>

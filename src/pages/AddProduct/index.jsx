@@ -22,9 +22,9 @@ function AddProduct() {
     const { name, value } = e.target;
     if (name === "carImage") {
       const file = e.target.files[0];
-      setData({ ...data, carImage: file });
+      setData((prev) => ({ ...prev, carImage: file }));
     } else {
-      setData({ ...data, [name]: value });
+      setData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
