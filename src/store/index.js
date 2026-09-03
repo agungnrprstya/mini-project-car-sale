@@ -8,6 +8,7 @@ import invoices from "./invoicesSlice";
 import invoice from "./invoiceSlice";
 import profiles from "./profilesSlice";
 import profile from "./profileSlice";
+import auth from "./authSlice";
 
 const reducers = combineReducers({
   products,
@@ -16,11 +17,13 @@ const reducers = combineReducers({
   invoice,
   profiles,
   profile,
+  auth,
 });
 
 const persistConfig = {
   key: "root",
   storage,
+  whitelist: ["products", "product", "auth"],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
