@@ -1,15 +1,21 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { APIAuth } from "../../apis/APIAuth";
 
-const logout = async () => {
-  await APIAuth.signOut();
-};
-
 function Sidebar() {
+  const navigate = useNavigate();
+
+  const logout = async () => {
+    try {
+      await APIAuth.signOut();
+      navigate(0);
+    } catch (error) {
+      console.error("Logout failed: ", error);
+    }
+  };
+
   return (
     <>
-      <link rel="stylesheet" href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" />
       <div className="flex flex-col h-screen w-[20rem] bg-gray-600 overflow-hidden">
         <div className="flex items-center justify-center h-20 shadow-md">
           <h1 className="text-3xl uppercase text-white">Bandar Mobil</h1>

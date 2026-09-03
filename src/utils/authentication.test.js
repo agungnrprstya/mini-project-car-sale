@@ -17,6 +17,10 @@ jest.mock("firebase/auth", () => ({
   signOut: jest.fn().mockResolvedValue(undefined),
 }));
 
+jest.mock("../store", () => ({
+  persistor: { purge: jest.fn().mockResolvedValue(undefined) },
+}));
+
 // The admin UID list comes from env vars
 const ADMIN_1 = "yRtgPLDGpPSpZitUsIKJ0rNVFVg2";
 const ADMIN_2 = "kwCxQSYuysSFB5rKeOeaTu5tZOM2";
@@ -39,8 +43,6 @@ describe("authentication", () => {
       expect(authentication.isAuthorizedAdmin()).toBe(true);
     });
 
-    // Regression guard: the old implementation trusted the cookie alone,
-    // so setting localId=<admin uid> in DevTools granted admin access.
     test("false when cookie is forged but no matching Firebase session", () => {
       auth.currentUser = { uid: "some-ordinary-user-uid" };
       Cookies.get.mockReturnValue(ADMIN_1);
@@ -52,10 +54,10 @@ describe("authentication", () => {
       expect(authentication.isAuthorizedAdmin()).toBe(false);
     });
 
-    test("falls back to cookie while Firebase restores the session", () => {
+    test("false when signed out — no cookie fallback", () => {
       auth.currentUser = null;
-      Cookies.get.mockReturnValue(ADMIN_2);
-      expect(authentication.isAuthorizedAdmin()).toBe(true);
+      Cookies.get.mockReturnValue(ADMIN_1);
+      expect(authentication.isAuthorizedAdmin()).toBe(false);
     });
 
     test("false when signed out and no cookie", () => {
@@ -78,7 +80,7 @@ describe("authentication", () => {
   });
 
   describe("logOut", () => {
-    test("clears all credential cookies", async () => {
+    test("clears all credential cookies and purges persisted state", async () => {
       await authentication.logOut();
       expect(Cookies.remove).toHaveBeenCalledWith("idToken");
       expect(Cookies.remove).toHaveBeenCalledWith("oauthAccessToken");
