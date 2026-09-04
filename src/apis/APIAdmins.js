@@ -18,6 +18,11 @@ export const APIAdmins = {
 
   addAdmin: async (uid) => {
     try {
+      // Cheap sanity check — Firebase Auth UIDs are 28 chars, alphanumeric.
+      // A typo would otherwise create a phantom admin doc.
+      if (!/^[a-zA-Z0-9]{28}$/.test(uid)) {
+        throw new Error("Invalid UID: expected a 28-character alphanumeric Firebase Auth UID");
+      }
       // doc id == auth UID; set() allows creating with a known id
       await setDoc(doc(db, "admins", uid), { uid, addedAt: new Date().toISOString() });
       return "Successfully added admin!";

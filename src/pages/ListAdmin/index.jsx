@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,9 +16,7 @@ function ListAdmin() {
   const currentUid = auth.currentUser?.uid;
   const [uidInput, setUidInput] = useState("");
 
-  useEffect(() => {
-    dispatch(fetchGetAdmins());
-  }, [dispatch]);
+  // The list is fetched by App on sign-in; only mutations refresh it here.
 
   const handleAdd = async () => {
     const uid = uidInput.trim();
@@ -98,7 +96,7 @@ function ListAdmin() {
       )}
       <div className="flex flex-row">
         <Sidebar />
-        <div className="px-[2rem] pt-[2rem] min-h-screen w-screen flex flex-col justify-between">
+        <div className="px-[2rem] pt-[2rem] min-h-screen flex-1 min-w-0 overflow-x-auto flex flex-col justify-between">
           <div className="mb-4">
             <input
               type="text"

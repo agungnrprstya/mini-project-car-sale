@@ -12,6 +12,10 @@ const initialState = {
 const adminsSlice = createSlice({
   name: "admins",
   initialState,
+  reducers: {
+    // Clears the admin list (used on sign-out — the collection is no longer readable)
+    resetAdmins: () => initialState,
+  },
   extraReducers: (builder) => {
     builder.addCase("fetch/getAdmins/pending", (state) => {
       state.status = "loading";
@@ -29,6 +33,7 @@ const adminsSlice = createSlice({
   },
 });
 
+export const { resetAdmins } = adminsSlice.actions;
 export const selectAdmins = (state) => state.admins;
 
 export default adminsSlice.reducer;
