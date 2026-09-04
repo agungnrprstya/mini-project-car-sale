@@ -1,6 +1,5 @@
 import authentication from "./authentication";
 import Cookies from "js-cookie";
-import { auth } from "../configs/firebase";
 
 jest.mock("js-cookie", () => ({
   get: jest.fn(),

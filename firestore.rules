@@ -30,9 +30,16 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
-    // admins: who is allowed to manage the shop — admin manages admins
+    // admins: who is allowed to manage the shop — admin manages admins.
+    // create/update must keep doc.uid equal to the doc id (keeps the
+    // collection honest); delete may never target your own doc, so a
+    // stray delete can't lock the last admin out server-side.
     match /admins/{uid} {
-      allow get, list, create, update, delete: if isAdmin();
+      allow get, list: if isAdmin();
+      allow create, update: if isAdmin()
+        && request.resource.data.uid == uid;
+      allow delete: if isAdmin()
+        && request.auth.uid != uid;
     }
 
     // products: public catalog — anyone can read, only admin can write

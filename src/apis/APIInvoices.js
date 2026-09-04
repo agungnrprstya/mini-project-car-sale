@@ -50,7 +50,7 @@ export const APIInvoices = {
 
   addInvoice: async (invoice) => {
     try {
-const docRef = await addDoc(collection(db, "invoices"), { ...invoice, createdAt: serverTimestamp() });
+    const docRef = await addDoc(collection(db, "invoices"), { ...invoice, createdAt: serverTimestamp() });
       return docRef;
     } catch (e) {
       console.error("Error adding document: ", e);
