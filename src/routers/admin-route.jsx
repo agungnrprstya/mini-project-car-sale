@@ -1,5 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { auth } from "../configs/firebase";
 import useIsAdmin from "../hooks/useIsAdmin";
 import { fetchGetAdmins, selectAdmins } from "../store/adminsSlice";
 import Unauthorized from "../pages/Unauthorized";
@@ -9,6 +10,10 @@ export default function AdminRoute() {
   const dispatch = useDispatch();
   const isAdmin = useIsAdmin();
   const admins = useSelector(selectAdmins);
+
+  // Not signed in at all — the admins list is never fetched for visitors, so
+  // its status stays "idle" forever. Don't wait for it; show 401 right away.
+  if (!auth.currentUser) return <Unauthorized />;
 
   // The admins list is fetched by App on auth state change, so this guard
   // only reacts to its status. A failed fetch means we couldn't verify
