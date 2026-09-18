@@ -2,15 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
+/* Poppins is loaded from public/index.html with preconnect. An @import here would be
+   dropped by the browser, because it no longer sits before the Tailwind rules. */
+@layer base {
+  body {
+    @apply bg-paper text-ink antialiased;
+  }
 
-* {
-  font-family: "Poppins", sans-serif;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+  /* One visible focus indicator for every control in the app, so no component has to
+     remove an outline to look clean. */
+  :focus-visible {
+    outline: 2px solid theme("colors.signal.DEFAULT");
+    outline-offset: 2px;
+  }
 }
 
-body {
-  background-color: rgb(238, 238, 238);
+@layer components {
+  /* Page gutter, defined once so both pages share the same horizontal rhythm. */
+  .shell {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import ProductCard from "../../components/Card";
@@ -6,6 +6,8 @@ import Pagination from "../../components/Pagination";
 import CategoryFilter from "../../components/Filter";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchGetProducts, selectProducts } from "../../store/productsSlice";
+
+const PRODUCTS_PER_PAGE = 9;
 
 function ProductPage() {
   const dispatch = useDispatch();
@@ -17,43 +19,62 @@ function ProductPage() {
     dispatch(fetchGetProducts());
   }, [dispatch]);
 
-  //Pagination
-  const productsPerPage = 9;
-  const startIndex = (currentPage - 1) * productsPerPage;
-  const endIndex = startIndex + productsPerPage;
-  const totalPages = Math.ceil(stateProducts.data?.length / productsPerPage);
+  const filteredProducts = useMemo(() => {
+    const data = stateProducts.data ?? [];
+    return selectedCategory === "All" ? data : data.filter((product) => product.carCategory === selectedCategory);
+  }, [stateProducts.data, selectedCategory]);
+
+  // Jumlah halaman ikut hasil filter, bukan seluruh data, supaya halaman kosong
+  // tidak muncul saat kategori dipersempit.
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+  const activePage = totalPages > 0 ? Math.min(currentPage, totalPages) : 1;
+  const startIndex = (activePage - 1) * PRODUCTS_PER_PAGE;
+  const productsToDisplay = {
+    ...stateProducts,
+    data: filteredProducts.slice(startIndex, startIndex + PRODUCTS_PER_PAGE),
+  };
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
-  // Product Filter
-  const handleCategoryChange = (carCategory) => {
-    setSelectedCategory(carCategory);
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
     setCurrentPage(1);
   };
 
-  // Display Product
-  const data = { ...stateProducts }; // Clone the data object
-
-  const filteredProducts =
-    selectedCategory === "All"
-      ? data
-      : {
-          ...data,
-          data: data.data?.filter((product) => product.carCategory === selectedCategory),
-        };
-  const productsToDisplay = {
-    ...filteredProducts,
-    data: filteredProducts.data?.slice(startIndex, endIndex),
-  };
+  const isLoaded = stateProducts.status === "success";
+  const emptyMessage =
+    isLoaded && filteredProducts.length === 0
+      ? selectedCategory === "All"
+        ? "No cars are listed yet."
+        : `No ${selectedCategory} cars are listed right now.`
+      : undefined;
 
   return (
-    <div className="flex flex-col min-h-screen justify-between">
+    <div className="flex min-h-screen flex-col">
       <Navbar />
-      <CategoryFilter selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
-      <ProductCard product={productsToDisplay} />
-      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+      <main className="flex-1">
+        <section className="shell py-12 lg:py-16">
+          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-paper-line pb-4">
+            <div>
+              <h1 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">All cars</h1>
+              {isLoaded && (
+                <p className="mt-2 text-sm text-ink-mute">
+                  {filteredProducts.length} {filteredProducts.length === 1 ? "car" : "cars"}
+                  {selectedCategory === "All" ? "" : ` in ${selectedCategory}`}
+                </p>
+              )}
+            </div>
+            <CategoryFilter selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
+          </div>
+          <h2 className="sr-only">Listings</h2>
+          <div className="mt-8">
+            <ProductCard product={productsToDisplay} emptyMessage={emptyMessage} />
+          </div>
+          {isLoaded && totalPages > 1 && <Pagination currentPage={activePage} totalPages={totalPages} onPageChange={handlePageChange} />}
+        </section>
+      </main>
       <Footer />
     </div>
   );

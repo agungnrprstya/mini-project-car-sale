@@ -1,5 +1,29 @@
 import React from "react";
 
+// Window halaman: 1 dan terakhir selalu tampil, sisanya sekitar halaman aktif.
+function getPageItems(currentPage, totalPages) {
+  if (!Number.isFinite(totalPages) || totalPages < 1) {
+    return [];
+  }
+
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
+  }
+
+  const visible = [...new Set([1, totalPages, currentPage - 1, currentPage, currentPage + 1])]
+    .filter((page) => page >= 1 && page <= totalPages)
+    .sort((a, b) => a - b);
+
+  const items = [];
+  visible.forEach((page, index) => {
+    if (index > 0 && page - visible[index - 1] > 1) {
+      items.push("gap");
+    }
+    items.push(page);
+  });
+  return items;
+}
+
 function Pagination({ currentPage, totalPages, onPageChange }) {
   const prevPage = () => {
     if (currentPage > 1) {
@@ -13,44 +37,52 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
     }
   };
 
+  const pageItems = getPageItems(currentPage, totalPages);
+  const controlClass =
+    "inline-flex h-11 w-11 items-center justify-center rounded-md border border-paper-line bg-white text-ink-soft transition-colors duration-200 hover:border-ink hover:text-ink disabled:cursor-not-allowed disabled:opacity-40";
+
   return (
-    <nav>
-      <ul className="bg-white cursor-pointer justify-center mx-auto w-0 max-w-screen-xl flex -space-x-px h-10 text-base mb-5">
+    <nav aria-label="Pagination" className="flex w-full justify-center py-8">
+      <ul className="flex items-center gap-1">
         <li>
-          <a
-            onClick={prevPage}
-            className="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover-text-gray-700 dark-bg-gray-800 dark-border-gray-700 dark-text-gray-400 dark-hover-bg-gray-700 dark-hover-text-white"
-          >
+          <button type="button" onClick={prevPage} disabled={currentPage <= 1} className={controlClass}>
             <span className="sr-only">Previous</span>
-            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+            <svg className="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
               <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 1 1 5l4 4" />
             </svg>
-          </a>
+          </button>
         </li>
 
-        {Array.from({ length: totalPages }).map((_, index) => (
-          <li key={index}>
-            <a
-              onClick={() => onPageChange(index + 1)}
-              className={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover-bg-gray-100 hover-text-gray-700 dark-bg-gray-800 dark-border-gray-700 dark-text-gray-400 dark-hover-bg-gray-700 dark-hover-text-white ${
-                currentPage === index + 1 ? "z-10 text-gray-700 bg-blue-100 hover:bg-blue-100" : "z-10 text-gray-600 bg-white hover:bg-blue-100"
-              }`}
-            >
-              {index + 1}
-            </a>
-          </li>
-        ))}
+        {pageItems.map((item, index) =>
+          item === "gap" ? (
+            <li key={`gap_${index}`} aria-hidden="true" className="px-1 text-ink-mute">
+              &#8230;
+            </li>
+          ) : (
+            <li key={item}>
+              <button
+                type="button"
+                onClick={() => onPageChange(item)}
+                aria-current={currentPage === item ? "page" : undefined}
+                className={`inline-flex h-11 min-w-11 items-center justify-center rounded-md border px-3 text-sm tabular-nums transition-colors duration-200 ${
+                  currentPage === item
+                    ? "border-ink bg-ink text-white"
+                    : "border-paper-line bg-white text-ink-soft hover:border-ink hover:text-ink"
+                }`}
+              >
+                {item}
+              </button>
+            </li>
+          )
+        )}
 
         <li>
-          <a
-            onClick={nextPage}
-            className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover-text-gray-700 dark-bg-gray-800 dark-border-gray-700 dark-text-gray-400 dark-hover-bg-gray-700 dark-hover-text-white"
-          >
+          <button type="button" onClick={nextPage} disabled={currentPage >= totalPages} className={controlClass}>
             <span className="sr-only">Next</span>
-            <svg className="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+            <svg className="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
               <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4" />
             </svg>
-          </a>
+          </button>
         </li>
       </ul>
     </nav>
