@@ -153,7 +153,7 @@ function Dashboard() {
               ))}
             </tbody>
           </table>
-          <div className="relative pt-[2rem] right-[50%] transform translate-x-1/2">
+          <div className="pt-[2rem]">
             <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
           </div>
         </div>

@@ -3,21 +3,23 @@ import React from "react";
 function CategoryFilter({ selectedCategory, onCategoryChange }) {
   const categories = ["All", "Sport", "SUV", "MPV", "Sedan", "Coupe", "Hatchback"];
   return (
-    <form className="mx-auto w-full max-w-screen-xl hidden lg:block">
-      <h3 className="sr-only">Categories</h3>
-      <ul role="list" className="flex flex-wrap flex-row gap-3 text-lg font-medium text-gray-900 pt-6">
-        {categories.map((category, index) => (
-          <li key={`${category}_${index}`} className="mb-2">
-            <a
-              onClick={() => onCategoryChange(category)}
-              className={`px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer ${selectedCategory === category ? "bg-gray-300" : ""}`}
-            >
-              {category}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </form>
+    <div role="group" aria-label="Filter cars by category" className="flex flex-wrap gap-2">
+      {categories.map((category, index) => (
+        <button
+          key={`${category}_${index}`}
+          type="button"
+          onClick={() => onCategoryChange(category)}
+          aria-pressed={selectedCategory === category}
+          className={`inline-flex min-h-11 items-center rounded-md border px-4 text-sm transition-colors duration-200 ${
+            selectedCategory === category
+              ? "border-ink bg-ink font-semibold text-white"
+              : "border-paper-line bg-white font-medium text-ink-soft hover:border-ink hover:text-ink"
+          }`}
+        >
+          {category}
+        </button>
+      ))}
+    </div>
   );
 }
 
