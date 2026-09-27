@@ -1,12 +1,28 @@
-# Getting Started with Create React App
+# mini-project-car-sale
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Create React App + Tailwind CSS. Dependency dikelola dengan **pnpm** dan `pnpm-lock.yaml` sudah disertakan — jangan memakai npm/yarn karena akan membuat lockfile kedua dan menimpa layout `node_modules` pnpm.
+
+## Menjalankan proyek (pnpm)
+
+```bash
+# 1. pasang pnpm — cukup sekali, pilih salah satu
+npx get-pnpm          # standalone (installer butuh Node >= 22.13)
+npm install -g pnpm   # lewat npm
+
+# 2. install dependency
+pnpm install
+
+# 3. jalankan dev server
+pnpm start            # http://localhost:3000
+```
+
+Untuk instalasi yang persis mengikuti lockfile (CI): `pnpm install --frozen-lockfile`. Package `core-js`, `core-js-pure`, dan `protobufjs` yang punya install script ditolak secara eksplisit lewat blok `allowBuilds` di `pnpm-workspace.yaml`.
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+### `pnpm start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
@@ -14,12 +30,12 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
-### `npm test`
+### `ppnpm test`
 
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+### `pnpm build`
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -29,7 +45,7 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### `pnpm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
@@ -65,6 +81,6 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/a
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm run build` fails to minify
+### `pnpm build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
