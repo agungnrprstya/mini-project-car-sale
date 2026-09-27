@@ -5,9 +5,8 @@ import authentication from "../utils/authentication";
 export const APIAuth = {
   signInWithCredentials: async ({ email, password }) => {
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      const { idToken, localId } = result._tokenResponse;
-      authentication.storeCredentialsToCookie({ idToken, localId });
+      // Sesi disimpan oleh Firebase (IndexedDB), bukan oleh cookie.
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
       console.error(err);
       throw new Error(err);
@@ -15,9 +14,7 @@ export const APIAuth = {
   },
   signInWithGoogleOAuth: async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const { oauthAccessToken, localId } = result._tokenResponse;
-      authentication.storeCredentialsToCookie({ oauthAccessToken, localId });
+      await signInWithPopup(auth, googleProvider);
     } catch (err) {
       console.error(err);
       throw new Error(err);

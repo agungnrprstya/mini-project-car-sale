@@ -4,36 +4,26 @@ import Cookies from "js-cookie";
 import { persistor } from "../store";
 
 const authentication = {
-  isAuthorized() {
-    if (this.getToken()) return true;
-    return false;
-  },
-
-  getToken() {
-    const token = Cookies.get("idToken") || Cookies.get("oauthAccessToken");
-    return token;
-  },
-
-  storeCredentialsToCookie({ idToken, oauthAccessToken, localId }) {
-    if (idToken) Cookies.set("idToken", idToken);
-    if (oauthAccessToken) Cookies.set("oauthAccessToken", oauthAccessToken);
-    if (localId) Cookies.set("localId", localId);
-  },
-
-  clearCredentialsFromCookie() {
-    Cookies.remove("idToken");
-    Cookies.remove("oauthAccessToken");
-    Cookies.remove("localId");
-  },
-
+  // Status login dibaca dari sesi Firebase (lihat hooks/useAuthUser.js).
+  // Cookie kredensial tidak lagi dipakai sebagai sumber status login, jadi
+  // fungsi isAuthorized()/getToken() sudah dihapus agar tidak ada dua sumber
+  // kebenaran yang bisa berbeda.
   async logOut() {
     try {
       await signOut(auth);
-      this.clearCredentialsFromCookie();
+      this.clearLegacyCookies();
       await persistor.purge();
     } catch (err) {
       console.error(err);
     }
+  },
+
+  // Membersihkan cookie kredensial versi lama yang mungkin masih tersimpan di
+  // browser pengguna agar tidak tertinggal setelah mekanisme ini dihapus.
+  clearLegacyCookies() {
+    Cookies.remove("idToken");
+    Cookies.remove("oauthAccessToken");
+    Cookies.remove("localId");
   },
 };
 
