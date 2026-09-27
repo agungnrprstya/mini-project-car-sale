@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { BsList, BsX } from "react-icons/bs";
 import { APIAuth } from "../../apis/APIAuth";
 import authentication from "../../utils/authentication";
