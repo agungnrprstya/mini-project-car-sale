@@ -3,8 +3,8 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { BsList, BsX } from "react-icons/bs";
 import { APIAuth } from "../../apis/APIAuth";
-import authentication from "../../utils/authentication";
 import useIsAdmin from "../../hooks/useIsAdmin";
+import useAuthUser from "../../hooks/useAuthUser";
 
 const primaryButton =
   "inline-flex min-h-11 items-center justify-center rounded-md bg-signal px-5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-signal-strong";
@@ -39,8 +39,12 @@ function Navbar() {
   const [open, setOpen] = useState(false);
   const toggleRef = useRef(null);
   const isAdmin = useIsAdmin();
+  const { user, initializing } = useAuthUser();
 
-  const authorized = authentication.isAuthorized();
+  // Sesi Firebase adalah sumber status login, sama seperti yang dipakai
+  // guard route. Sebelum pemulihan sesi selesai, tombol auth tidak
+  // ditampilkan agar tidak berkedip "Sign In" lalu berubah "Logout".
+  const authorized = Boolean(user);
 
   const logout = async () => {
     setLoading(true);
@@ -90,20 +94,21 @@ function Navbar() {
           </div>
 
           <div className="flex items-center gap-2">
-            {authorized ? (
-              <button
-                type="button"
-                onClick={logout}
-                disabled={loading}
-                className={`${outlineButton} hidden disabled:opacity-60 lg:inline-flex`}
-              >
-                {loading ? "Logging out..." : "Logout"}
-              </button>
-            ) : (
-              <Link to="/login" className={`${primaryButton} hidden lg:inline-flex`}>
-                Sign In
-              </Link>
-            )}
+            {!initializing &&
+              (authorized ? (
+                <button
+                  type="button"
+                  onClick={logout}
+                  disabled={loading}
+                  className={`${outlineButton} hidden disabled:opacity-60 lg:inline-flex`}
+                >
+                  {loading ? "Logging out..." : "Logout"}
+                </button>
+              ) : (
+                <Link to="/login" className={`${primaryButton} hidden lg:inline-flex`}>
+                  Sign In
+                </Link>
+              ))}
             <button
               type="button"
               ref={toggleRef}
@@ -137,15 +142,16 @@ function Navbar() {
               Dashboard
             </NavLink>
           )}
-          {authorized ? (
-            <button type="button" onClick={logout} disabled={loading} className={`${outlineButton} mt-2 w-full disabled:opacity-60`}>
-              {loading ? "Logging out..." : "Logout"}
-            </button>
-          ) : (
-            <Link to="/login" onClick={closeMobile} className={`${primaryButton} mt-2 w-full`}>
-              Sign In
-            </Link>
-          )}
+          {!initializing &&
+            (authorized ? (
+              <button type="button" onClick={logout} disabled={loading} className={`${outlineButton} mt-2 w-full disabled:opacity-60`}>
+                {loading ? "Logging out..." : "Logout"}
+              </button>
+            ) : (
+              <Link to="/login" onClick={closeMobile} className={`${primaryButton} mt-2 w-full`}>
+                Sign In
+              </Link>
+            ))}
         </nav>
       </div>
     </header>
